@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <!-- ================================================================
+       MONICA CARVALHO — CONSULTORA IMOBILIÁRIA | BARRA DA TIJUCA · RJ
+       ----------------------------------------------------------------
+       GUIA RÁPIDO DE EDIÇÃO (leia antes de mexer):
+
+       1. WHATSAPP E INSTAGRAM  → edite UMA VEZ no topo do script.js
+          (objeto CONFIG). Todos os botões do site usam esse valor
+          automaticamente. Não precisa editar link por link.
+
+       2. IMÓVEIS (venda/locação) → edite a lista IMOVEIS no script.js.
+          Cada imóvel é um bloco { ... }. Os cards são gerados sozinhos.
+
+       3. CORES E FONTES → edite as variáveis no topo do style.css
+          (seção "DESIGN TOKENS — EDITE AQUI").
+
+       4. FOTOS DA MONICA → procure por "FOTO-MONICA" neste arquivo
+          e troque o src pela foto real.
+
+       5. IMAGEM DE FUNDO DO TOPO (hero) → veja "--hero-image"
+          no style.css.
+       ================================================================ -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- ========== SEO: título e descrição que aparecem no Google ========== -->
+  <title>Monica Carvalho | Consultora Imobiliária</title>
+  <meta name="description" content="Monica Carvalho é consultora imobiliária especialista na Barra da Tijuca, Rio de Janeiro. Compra, venda, locação e lançamentos com atendimento próximo e seguro." />
+  <meta name="keywords" content="consultora imobiliária, barra da tijuca, imóveis rio de janeiro, compra, venda, locação, lançamentos" />
+  <meta name="author" content="Monica Carvalho" />
+  <meta name="robots" content="index, follow" />
+  <!-- EDITE: quando o site tiver domínio próprio, troque a URL abaixo -->
+  <link rel="canonical" href="https://monicacarvalho.vercel.app/" />
+  <meta name="theme-color" content="#0f3d3e" />
+
+  <!-- ========== Open Graph: como o link aparece no WhatsApp/Instagram ========== -->
+  <meta property="og:type" content="website" />
+  <meta property="og:locale" content="pt_BR" />
+  <meta property="og:site_name" content="Monica Carvalho" />
+  <meta property="og:title" content="Monica Carvalho | Consultora Imobiliária" />
+  <meta property="og:description" content="Especialista na Barra da Tijuca: compra, venda, locação e lançamentos com atendimento próximo e seguro." />
+  <meta property="og:url" content="https://monicacarvalho.vercel.app/" />
+  <!-- EDITE: troque pela imagem de compartilhamento (1200x630px) -->
+  <meta property="og:image" content="https://placehold.co/1200x630/0f3d3e/f5efe4?text=Monica+Carvalho+Consultora+Imobiliaria" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="Monica Carvalho — Consultora Imobiliária na Barra da Tijuca" />
+
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Monica Carvalho | Consultora Imobiliária" />
+  <meta name="twitter:description" content="Especialista na Barra da Tijuca: compra, venda, locação e lançamentos." />
+
+  <!-- ========== Fontes (Google Fonts) ==========
+       Fraunces  → títulos (serifada, elegante)
+       Plus Jakarta Sans → textos
+       Para trocar: escolha em fonts.google.com, substitua o link abaixo
+       e atualize --font-display / --font-body no style.css -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body id="topo">
+
+  <!-- ================================================================
+       CABEÇALHO FIXO
+       O botão "WhatsApp" recebe o link automaticamente via script.js
+       (todo elemento com a classe .js-whatsapp é preenchido sozinho).
+       ================================================================ -->
+  <header class="header" id="header">
+    <div class="container header__inner">
+      <a href="#topo" class="logo" aria-label="Monica Carvalho — voltar ao início">
+        <span class="logo__badge">MC</span>
+        <span class="logo__text"><strong>Monica Carvalho</strong><small>Consultora Imobiliária</small></span>
+      </a>
+
+      <nav class="nav" id="nav" aria-label="Navegação principal">
+        <a href="#sobre" class="nav__link">Sobre</a>
+        <a href="#atendimento" class="nav__link">Atendimento</a>
+        <a href="#imoveis" class="nav__link">Imóveis</a>
+        <a href="#depoimentos" class="nav__link">Depoimentos</a>
+        <a href="#contato" class="nav__link">Contato</a>
+      </nav>
+
+      <a href="#" class="btn btn--primary header__cta js-whatsapp" target="_blank" rel="noopener"
+         aria-label="Falar com Monica pelo WhatsApp">WhatsApp</a>
+
+      <button class="nav-toggle" id="navToggle" aria-label="Abrir menu de navegação" aria-expanded="false" aria-controls="nav">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <main>
+    <!-- ================================================================
+         HERO (topo do site)
+         A imagem de fundo é controlada pela variável --hero-image no
+         style.css. Para usar uma foto da Barra (orla, condomínio etc.),
+         siga a instrução lá.
+         ================================================================ -->
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="hero__overlay" aria-hidden="true"></div>
+      <div class="container hero__inner">
+        <div class="hero__content reveal">
+          <span class="eyebrow"> Rio de Janeiro</span>
+          <h1 id="hero-title">O imóvel certo, no bairro que você <em>já escolheu.</em></h1>
+          <p class="hero__lead">Eu te acompanho na compra, venda e locação de imóveis na região onde sou especialista — com curadoria, transparência e presença em cada etapa.</p>
+
+          <div class="hero__actions">
+            <a href="#" class="btn btn--primary js-whatsapp" target="_blank" rel="noopener"
+               aria-label="Falar com Monica pelo WhatsApp">Falar com Monica</a>
+            <a href="#imoveis" class="btn btn--outline" aria-label="Ver imóveis disponíveis">Ver imóveis disponíveis</a>
+          </div>
+
+          <!-- ============ NÚMEROS ANIMADOS ============
+               EDITE: troque data-count pelo número real e o texto abaixo.
+               data-prefix="+" adiciona o sinal de + antes do número.
+               O conteúdo dentro de <strong> é o valor final exibido
+               caso a animação não rode. -->
+          <ul class="stats" aria-label="Resultados de Monica Carvalho">
+            <li class="stats__item"><strong data-count="300" data-prefix="+">+120</strong><span>Imóveis negociados</span></li>
+            <li class="stats__item"><strong data-count="200" data-prefix="+">+200</strong><span>Famílias atendidas</span></li>
+            <li class="stats__item"><strong data-count="15" data-prefix="+">+10</strong><span>Anos de experiência</span></li>
+            <li class="stats__item"><strong>Barra da Tijuca</strong><span>Atuação local e especializada</span></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================================================================
+         SOBRE A MONICA
+         FOTO-MONICA: troque o src abaixo pela foto profissional dela.
+         Tamanho ideal: retrato vertical, ~800x1000px.
+         ================================================================ -->
+    <section class="section" id="sobre" aria-labelledby="sobre-title">
+      <div class="container about__grid">
+        <figure class="about__media reveal">
+          <!-- FOTO-MONICA (retrato principal) -->
+          <img src="imagem_monica.webp"
+               alt="Monica Carvalho, consultora imobiliária na Barra da Tijuca" loading="lazy" width="800" height="1000" />
+          <figcaption class="about__chip">CRECI · <span>55641</span></figcaption>
+        </figure>
+
+        <div class="about__content reveal delay-1">
+          <span class="eyebrow">Sobre a Monica</span>
+          <h2 id="sobre-title">Orientação segura para uma das decisões mais importantes da sua vida.</h2>
+          <p>Especialista no mercado da Barra da Tijuca, Monica Carvalho atende famílias e investidores com escuta, estratégia e acompanhamento completo — da primeira visita à entrega das chaves. Conhecimento real do bairro: condomínios, regiões, valores e oportunidades.</p>
+          <ul class="about__tags" aria-label="Diferenciais">
+            <li>Especialista na Barra da Tijuca</li>
+            <li>Compra e venda</li>
+            <li>Locação</li>
+            <li>Lançamentos</li>
+          </ul>
+          <a href="#" class="btn btn--primary js-whatsapp" target="_blank" rel="noopener"
+             aria-label="Conversar com Monica pelo WhatsApp">Conversar com Monica</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================================================================
+         ATENDIMENTO (etapas numeradas — a ordem importa)
+         EDITE os títulos/descrições se quiser mudar as etapas.
+         ================================================================ -->
+    <section class="section section--tinted" id="atendimento" aria-labelledby="atendimento-title">
+      <div class="container">
+        <div class="section-head reveal">
+          <span class="eyebrow">Atendimento personalizado</span>
+          <h2 id="atendimento-title">Cada etapa com escuta, estratégia e cuidado.</h2>
+        </div>
+
+        <ol class="process-grid">
+          <li class="process-step reveal"><span class="process-step__num">01</span><h3>Entendimento do seu perfil</h3><p>Conversa inicial para mapear objetivos, orçamento e estilo de vida.</p></li>
+          <li class="process-step reveal delay-1"><span class="process-step__num">02</span><h3>Curadoria de imóveis</h3><p>Seleção de opções na região que realmente faz sentido para você.</p></li>
+          <li class="process-step reveal delay-2"><span class="process-step__num">03</span><h3>Visitas acompanhadas</h3><p>Presença em cada visita, com olhar técnico e atenção aos detalhes.</p></li>
+          <li class="process-step reveal delay-3"><span class="process-step__num">04</span><h3>Negociação até as chaves</h3><p>Apoio na proposta, documentação e assinatura, do início ao fim.</p></li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- ================================================================
+         IMÓVEIS DISPONÍVEIS  ★ SEÇÃO PREPARADA PARA BANCO DE DADOS ★
+         ----------------------------------------------------------------
+         NÃO edite os cards aqui: eles são GERADOS AUTOMATICAMENTE pelo
+         script.js a partir da lista IMOVEIS (que funciona como um
+         "banco de dados" local).
+
+         → PARA ADICIONAR/EDITAR IMÓVEIS: abra o script.js e edite a
+           lista IMOVEIS (tem instruções detalhadas lá).
+
+         → NO FUTURO (banco de dados real): a única mudança será trocar
+           a lista IMOVEIS por uma chamada de API. O HTML já está pronto
+           e não precisará mudar.
+         ================================================================ -->
+    <section class="section" id="imoveis" aria-labelledby="imoveis-title">
+      <div class="container">
+        <div class="section-head reveal">
+          <span class="eyebrow">Imóveis disponíveis</span>
+          <h2 id="imoveis-title">Disponíveis para venda e locação.</h2>
+          <p>Confira as oportunidades selecionadas ou peça uma curadoria de acordo com o seu perfil.</p>
+        </div>
+
+        <!-- Filtros: os valores de data-filter correspondem ao campo
+             "tipo" de cada imóvel no script.js -->
+        <div class="filters reveal" role="group" aria-label="Filtrar imóveis">
+          <button class="filter-btn is-active" data-filter="todos" aria-pressed="true">Todos</button>
+          <button class="filter-btn" data-filter="venda" aria-pressed="false">Venda</button>
+          <button class="filter-btn" data-filter="locacao" aria-pressed="false">Locação</button>
+          <button class="filter-btn" data-filter="lancamento" aria-pressed="false">Lançamentos</button>
+        </div>
+
+        <!-- Os cards de imóveis são inseridos aqui pelo script.js -->
+        <div class="properties-grid" id="propertiesGrid" aria-live="polite"></div>
+
+        <p class="properties-note reveal">Os imóveis exibidos podem sofrer alterações de disponibilidade, valores e condições.</p>
+      </div>
+    </section>
+
+    <!-- ================================================================
+         DEPOIMENTOS
+         EDITE: troque os textos e nomes pelos depoimentos reais.
+         Para adicionar mais um, copie um bloco <blockquote>...</blockquote>
+         inteiro e cole abaixo do último.
+         ================================================================ -->
+    <section class="section section--tinted" id="depoimentos" aria-labelledby="depoimentos-title">
+      <div class="container">
+        <div class="section-head reveal">
+          <span class="eyebrow">Depoimentos</span>
+          <h2 id="depoimentos-title">Relatos de quem foi atendido com atenção.</h2>
+        </div>
+
+        <div class="testimonials-grid">
+          <blockquote class="testimonial-card reveal">
+            <p>“A Monica entendeu exatamente o que a nossa família precisava. Encontramos o apartamento ideal na Barra sem estresse.”</p>
+            <footer><strong>Edite: nome do cliente</strong><span>Compra · Barra da Tijuca</span></footer>
+          </blockquote>
+          <blockquote class="testimonial-card reveal delay-1">
+            <p>“Atendimento transparente do início ao fim. Me senti segura em todas as etapas da negociação.”</p>
+            <footer><strong>Edite: nome do cliente</strong><span>Venda · Barra da Tijuca</span></footer>
+          </blockquote>
+          <blockquote class="testimonial-card reveal delay-2">
+            <p>“Aluguei meu imóvel rápido e com toda a documentação certinha. Recomendo demais o trabalho dela.”</p>
+            <footer><strong>Edite: nome do cliente</strong><span>Locação · Barra da Tijuca</span></footer>
+          </blockquote>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================================================================
+         CHAMADA FINAL (CTA)
+         ================================================================ -->
+    <section class="section cta" id="contato" aria-labelledby="cta-title">
+      <div class="container cta__inner reveal">
+        <span class="eyebrow eyebrow--light">Um novo endereço para a sua história</span>
+        <h2 id="cta-title">Vamos encontrar o seu próximo imóvel?</h2>
+        <p>Fale com Monica e receba um atendimento personalizado para comprar, vender, alugar ou investir com segurança.</p>
+        <div class="cta__actions">
+          <a href="#" class="btn btn--gold js-whatsapp" target="_blank" rel="noopener"
+             aria-label="Falar com Monica no WhatsApp">Falar com Monica no WhatsApp</a>
+          <a href="#" class="btn btn--outline-light js-instagram" target="_blank" rel="noopener"
+             aria-label="Seguir Monica no Instagram">Seguir no Instagram</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ================================================================
+       RODAPÉ
+       Os links de WhatsApp e Instagram também são preenchidos
+       automaticamente pelo script.js (classes .js-whatsapp / .js-instagram).
+       ================================================================ -->
+  <footer class="footer">
+    <div class="container footer__inner">
+      <a href="#topo" class="logo" aria-label="Monica Carvalho — voltar ao início">
+        <span class="logo__badge">MC</span>
+        <span class="logo__text"><strong>Monica Carvalho</strong><small>Consultora Imobiliária · Barra da Tijuca</small></span>
+      </a>
+      <p class="footer__tagline">Mais do que imóveis: novos começos conduzidos com cuidado.</p>
+      <nav class="footer__links" aria-label="Contatos">
+        <a href="#" class="js-whatsapp" target="_blank" rel="noopener">WhatsApp</a>
+        <a href="#" class="js-instagram" target="_blank" rel="noopener">Instagram</a>
+      </nav>
+      <!-- EDITE: coloque o CRECI real da Monica abaixo -->
+      <p class="footer__copy">© <span id="year">2026</span> Monica Carvalho · CRECI 55641 · Todos os direitos reservados.</p>
+    </div>
+  </footer>
+
+  <!-- ================================================================
+       BOTÃO FLUTUANTE DO WHATSAPP (com animação de pulsar)
+       O link é preenchido automaticamente pelo script.js.
+       ================================================================ -->
+  <a href="#" class="whatsapp-float js-whatsapp" target="_blank" rel="noopener"
+     aria-label="Conversar agora pelo WhatsApp">
+    <svg viewBox="0 0 32 32" width="30" height="30" fill="currentColor" aria-hidden="true" focusable="false">
+      <path d="M16 .8C7.6.8.8 7.6.8 16c0 2.7.7 5.3 2 7.6L.8 31.2l7.8-2c2.2 1.2 4.7 1.9 7.4 1.9 8.4 0 15.2-6.8 15.2-15.2S24.4.8 16 .8zm0 27.7c-2.4 0-4.7-.6-6.7-1.8l-.5-.3-4.6 1.2 1.2-4.5-.3-.5c-1.3-2-2-4.4-2-6.8C3.1 8.9 8.9 3.1 16 3.1S28.9 8.9 28.9 16 23.1 28.5 16 28.5zm7.1-9.5c-.4-.2-2.3-1.1-2.6-1.3-.4-.1-.6-.2-.9.2-.3.4-1 1.3-1.2 1.5-.2.3-.4.3-.8.1-.4-.2-1.6-.6-3.1-1.9-1.1-1-1.9-2.3-2.1-2.6-.2-.4 0-.6.2-.8l.6-.7c.2-.2.3-.4.4-.7.1-.3.1-.5 0-.7-.1-.2-.9-2.1-1.2-2.9-.3-.8-.6-.7-.9-.7h-.8c-.3 0-.7.1-1.1.5-.4.4-1.4 1.4-1.4 3.4s1.5 3.9 1.7 4.2c.2.3 2.9 4.5 7.1 6.3 1 .4 1.8.7 2.4.9 1 .3 1.9.3 2.6.2.8-.1 2.3-1 2.6-1.9.3-.9.3-1.7.2-1.9-.1-.2-.4-.3-.8-.5z"/>
+    </svg>
+  </a>
+
+  <script src="script.js" defer></script>
+</body>
+</html>
