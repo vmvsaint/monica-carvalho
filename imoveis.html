@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <!-- ================================================================
+       PÁGINA: CATÁLOGO DE IMÓVEIS (imoveis.html)
+       ----------------------------------------------------------------
+       Esta página lista TODOS os imóveis cadastrados no dados.js.
+       Ela pode ser aberta já filtrada pelo endereço:
+         imoveis.html                  → todos
+         imoveis.html?tipo=venda      → só venda
+         imoveis.html?tipo=locacao    → só locação
+         imoveis.html?tipo=lancamento → só lançamentos
+
+       VOCÊ NÃO CADASTRA IMÓVEIS AQUI. Os cards são gerados
+       automaticamente a partir do dados.js. Para adicionar ou
+       editar imóveis, edite o dados.js (instruções no COMO-EDITAR.txt).
+       ================================================================ -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <title>Imóveis na Barra da Tijuca | Monica Carvalho</title>
+  <meta name="description" content="Catálogo de imóveis para venda, locação e lançamentos na Barra da Tijuca, Rio de Janeiro. Atendimento personalizado com Monica Carvalho." />
+  <meta name="robots" content="index, follow" />
+  <meta name="theme-color" content="#0f3d3e" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="style.css" />
+</head>
+<!-- data-page="lista" avisa o script.js que esta é a página de catálogo -->
+<body data-page="lista">
+
+  <!-- Cabeçalho: igual ao da página principal, mas os links de
+       navegação apontam para as seções do index.html -->
+  <header class="header" id="header">
+    <div class="container header__inner">
+      <a href="index.html" class="logo" aria-label="Monica Carvalho — página inicial">
+        <span class="logo__badge">MC</span>
+        <span class="logo__text"><strong>Monica Carvalho</strong><small>Consultora Imobiliária</small></span>
+      </a>
+
+      <nav class="nav" id="nav" aria-label="Navegação principal">
+        <a href="index.html#sobre" class="nav__link">Sobre</a>
+        <a href="index.html#atendimento" class="nav__link">Atendimento</a>
+        <a href="imoveis.html" class="nav__link">Imóveis</a>
+        <a href="index.html#depoimentos" class="nav__link">Depoimentos</a>
+        <a href="index.html#contato" class="nav__link">Contato</a>
+      </nav>
+
+      <a href="#" class="btn btn--primary header__cta js-whatsapp" target="_blank" rel="noopener"
+         aria-label="Falar com Monica pelo WhatsApp">WhatsApp</a>
+
+      <button class="nav-toggle" id="navToggle" aria-label="Abrir menu de navegação" aria-expanded="false" aria-controls="nav">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <main>
+    <!-- Faixa de título da página. O texto do <h1> muda sozinho
+         conforme o filtro escolhido (script.js). -->
+    <section class="page-hero" aria-labelledby="listaTitulo">
+      <div class="container">
+        <span class="eyebrow eyebrow--light">Barra da Tijuca · Rio de Janeiro</span>
+        <h1 id="listaTitulo">Todos os imóveis</h1>
+        <p>Clique em um imóvel para ver fotos, descrição completa e valores.</p>
+      </div>
+    </section>
+
+    <section class="section" aria-label="Catálogo de imóveis">
+      <div class="container">
+        <!-- Filtros: aqui eles FILTRAM na própria página -->
+        <div class="filters" role="group" aria-label="Filtrar imóveis por categoria">
+          <button class="filter-btn is-active" data-filter="todos" aria-pressed="true">Todos</button>
+          <button class="filter-btn" data-filter="venda" aria-pressed="false">Venda</button>
+          <button class="filter-btn" data-filter="locacao" aria-pressed="false">Locação</button>
+          <button class="filter-btn" data-filter="lancamento" aria-pressed="false">Lançamentos</button>
+        </div>
+
+        <!-- Os cards são inseridos aqui pelo script.js -->
+        <div class="properties-grid" id="propertiesGrid" aria-live="polite"></div>
+
+        <p class="properties-note">Os imóveis exibidos podem sofrer alterações de disponibilidade, valores e condições.</p>
+      </div>
+    </section>
+
+    <!-- Chamada final -->
+    <section class="section cta" aria-labelledby="cta-title">
+      <div class="container cta__inner">
+        <span class="eyebrow eyebrow--light">Não encontrou o que procura?</span>
+        <h2 id="cta-title">Monica encontra o imóvel certo para você.</h2>
+        <p>Conte o que você procura e receba uma curadoria personalizada de imóveis na Barra da Tijuca.</p>
+        <div class="cta__actions">
+          <a href="#" class="btn btn--gold js-whatsapp" target="_blank" rel="noopener"
+             aria-label="Pedir curadoria pelo WhatsApp">Pedir curadoria no WhatsApp</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer__inner">
+      <a href="index.html" class="logo" aria-label="Monica Carvalho — página inicial">
+        <span class="logo__badge">MC</span>
+        <span class="logo__text"><strong>Monica Carvalho</strong><small>Consultora Imobiliária · Barra da Tijuca</small></span>
+      </a>
+      <p class="footer__tagline">Mais do que imóveis: novos começos conduzidos com cuidado.</p>
+      <nav class="footer__links" aria-label="Contatos">
+        <a href="#" class="js-whatsapp" target="_blank" rel="noopener">WhatsApp</a>
+        <a href="#" class="js-instagram" target="_blank" rel="noopener">Instagram</a>
+      </nav>
+      <p class="footer__copy">© <span id="year">2026</span> Monica Carvalho · CRECI 00000 · Todos os direitos reservados.</p>
+    </div>
+  </footer>
+
+  <!-- Botão flutuante do WhatsApp -->
+  <a href="#" class="whatsapp-float js-whatsapp" target="_blank" rel="noopener"
+     aria-label="Conversar agora pelo WhatsApp">
+    <svg viewBox="0 0 32 32" width="30" height="30" fill="currentColor" aria-hidden="true" focusable="false">
+      <path d="M16 .8C7.6.8.8 7.6.8 16c0 2.7.7 5.3 2 7.6L.8 31.2l7.8-2c2.2 1.2 4.7 1.9 7.4 1.9 8.4 0 15.2-6.8 15.2-15.2S24.4.8 16 .8zm0 27.7c-2.4 0-4.7-.6-6.7-1.8l-.5-.3-4.6 1.2 1.2-4.5-.3-.5c-1.3-2-2-4.4-2-6.8C3.1 8.9 8.9 3.1 16 3.1S28.9 8.9 28.9 16 23.1 28.5 16 28.5zm7.1-9.5c-.4-.2-2.3-1.1-2.6-1.3-.4-.1-.6-.2-.9.2-.3.4-1 1.3-1.2 1.5-.2.3-.4.3-.8.1-.4-.2-1.6-.6-3.1-1.9-1.1-1-1.9-2.3-2.1-2.6-.2-.4 0-.6.2-.8l.6-.7c.2-.2.3-.4.4-.7.1-.3.1-.5 0-.7-.1-.2-.9-2.1-1.2-2.9-.3-.8-.6-.7-.9-.7h-.8c-.3 0-.7.1-1.1.5-.4.4-1.4 1.4-1.4 3.4s1.5 3.9 1.7 4.2c.2.3 2.9 4.5 7.1 6.3 1 .4 1.8.7 2.4.9 1 .3 1.9.3 2.6.2.8-.1 2.3-1 2.6-1.9.3-.9.3-1.7.2-1.9-.1-.2-.4-.3-.8-.5z"/>
+    </svg>
+  </a>
+
+  <!-- dados.js (contatos + imóveis) precisa vir ANTES do script.js -->
+  <script src="dados.js"></script>
+  <script src="script.js" defer></script>
+</body>
+</html>

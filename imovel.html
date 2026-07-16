@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <!-- ================================================================
+       PÁGINA: DETALHES DO IMÓVEL (imovel.html)
+       ----------------------------------------------------------------
+       Esta é UMA página só que mostra QUALQUER imóvel do dados.js.
+       O imóvel exibido é definido pelo endereço:
+         imovel.html?id=1  → mostra o imóvel de id 1
+         imovel.html?id=2  → mostra o imóvel de id 2  ...e assim vai.
+
+       Todo o conteúdo (fotos, textos, preço, características) é
+       montado automaticamente pelo script.js a partir do dados.js.
+       Você NÃO precisa criar uma página nova por imóvel — basta
+       cadastrar o imóvel no dados.js que a página dele já existe.
+       ================================================================ -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- O título é trocado automaticamente pelo nome do imóvel -->
+  <title>Imóvel | Monica Carvalho</title>
+  <meta name="description" content="Detalhes do imóvel: fotos, descrição completa, características e valores. Monica Carvalho, consultora imobiliária na Barra da Tijuca." />
+  <meta name="robots" content="index, follow" />
+  <meta name="theme-color" content="#0f3d3e" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="style.css" />
+</head>
+<!-- data-page="detalhe" avisa o script.js que esta é a página de detalhes -->
+<body data-page="detalhe">
+
+  <header class="header" id="header">
+    <div class="container header__inner">
+      <a href="index.html" class="logo" aria-label="Monica Carvalho — página inicial">
+        <span class="logo__badge">MC</span>
+        <span class="logo__text"><strong>Monica Carvalho</strong><small>Consultora Imobiliária</small></span>
+      </a>
+
+      <nav class="nav" id="nav" aria-label="Navegação principal">
+        <a href="index.html#sobre" class="nav__link">Sobre</a>
+        <a href="index.html#atendimento" class="nav__link">Atendimento</a>
+        <a href="imoveis.html" class="nav__link">Imóveis</a>
+        <a href="index.html#depoimentos" class="nav__link">Depoimentos</a>
+        <a href="index.html#contato" class="nav__link">Contato</a>
+      </nav>
+
+      <a href="#" class="btn btn--primary header__cta js-whatsapp" target="_blank" rel="noopener"
+         aria-label="Falar com Monica pelo WhatsApp">WhatsApp</a>
+
+      <button class="nav-toggle" id="navToggle" aria-label="Abrir menu de navegação" aria-expanded="false" aria-controls="nav">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <main>
+    <section class="section section--detail" aria-label="Detalhes do imóvel">
+      <div class="container">
+        <!-- Todo o conteúdo do imóvel é montado aqui pelo script.js -->
+        <div id="propertyDetail"></div>
+      </div>
+    </section>
+
+    <!-- Imóveis semelhantes (mesmo tipo). A seção fica escondida
+         se não houver outros imóveis do mesmo tipo. -->
+    <section class="section section--tinted" id="relatedSection" hidden aria-labelledby="related-title">
+      <div class="container">
+        <div class="section-head">
+          <span class="eyebrow">Você também pode gostar</span>
+          <h2 id="related-title">Imóveis semelhantes</h2>
+        </div>
+        <div class="properties-grid" id="relatedGrid"></div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer__inner">
+      <a href="index.html" class="logo" aria-label="Monica Carvalho — página inicial">
+        <span class="logo__badge">MC</span>
+        <span class="logo__text"><strong>Monica Carvalho</strong><small>Consultora Imobiliária · Barra da Tijuca</small></span>
+      </a>
+      <p class="footer__tagline">Mais do que imóveis: novos começos conduzidos com cuidado.</p>
+      <nav class="footer__links" aria-label="Contatos">
+        <a href="#" class="js-whatsapp" target="_blank" rel="noopener">WhatsApp</a>
+        <a href="#" class="js-instagram" target="_blank" rel="noopener">Instagram</a>
+      </nav>
+      <p class="footer__copy">© <span id="year">2026</span> Monica Carvalho · CRECI 00000 · Todos os direitos reservados.</p>
+    </div>
+  </footer>
+
+  <!-- Botão flutuante do WhatsApp -->
+  <a href="#" class="whatsapp-float js-whatsapp" target="_blank" rel="noopener"
+     aria-label="Conversar agora pelo WhatsApp">
+    <svg viewBox="0 0 32 32" width="30" height="30" fill="currentColor" aria-hidden="true" focusable="false">
+      <path d="M16 .8C7.6.8.8 7.6.8 16c0 2.7.7 5.3 2 7.6L.8 31.2l7.8-2c2.2 1.2 4.7 1.9 7.4 1.9 8.4 0 15.2-6.8 15.2-15.2S24.4.8 16 .8zm0 27.7c-2.4 0-4.7-.6-6.7-1.8l-.5-.3-4.6 1.2 1.2-4.5-.3-.5c-1.3-2-2-4.4-2-6.8C3.1 8.9 8.9 3.1 16 3.1S28.9 8.9 28.9 16 23.1 28.5 16 28.5zm7.1-9.5c-.4-.2-2.3-1.1-2.6-1.3-.4-.1-.6-.2-.9.2-.3.4-1 1.3-1.2 1.5-.2.3-.4.3-.8.1-.4-.2-1.6-.6-3.1-1.9-1.1-1-1.9-2.3-2.1-2.6-.2-.4 0-.6.2-.8l.6-.7c.2-.2.3-.4.4-.7.1-.3.1-.5 0-.7-.1-.2-.9-2.1-1.2-2.9-.3-.8-.6-.7-.9-.7h-.8c-.3 0-.7.1-1.1.5-.4.4-1.4 1.4-1.4 3.4s1.5 3.9 1.7 4.2c.2.3 2.9 4.5 7.1 6.3 1 .4 1.8.7 2.4.9 1 .3 1.9.3 2.6.2.8-.1 2.3-1 2.6-1.9.3-.9.3-1.7.2-1.9-.1-.2-.4-.3-.8-.5z"/>
+    </svg>
+  </a>
+
+  <!-- dados.js (contatos + imóveis) precisa vir ANTES do script.js -->
+  <script src="dados.js"></script>
+  <script src="script.js" defer></script>
+</body>
+</html>
