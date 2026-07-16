@@ -39,7 +39,7 @@
        --hero-image: url("imagens/orla-barra.jpg");
      A foto recebe automaticamente uma camada verde-escura por cima
      para o texto continuar legível (veja .hero__overlay).          */
-  --hero-image: url("orla-barra.webp");
+  --hero-image: url("imagens/main-site/orla-barra.webp");
 
   /* ---------- FONTES ----------
      Se trocar as fontes no <head> do index.html, atualize aqui.    */
@@ -149,6 +149,7 @@ h1 em {
   background: var(--primary);
   color: #f6f3ec;
   box-shadow: 0 8px 22px rgba(15, 61, 62, 0.28);
+  border: 1.5px solid #ffffff;
 }
 .btn--primary:hover {
   background: var(--primary-dark);
@@ -440,6 +441,8 @@ h1 em {
 }
 
 .filter-btn {
+  display: inline-flex;      /* garante o mesmo visual em <button> e <a> */
+  align-items: center;
   font-family: var(--font-body);
   font-size: 0.85rem;
   font-weight: 700;
@@ -716,4 +719,168 @@ h1 em {
   .about__media { margin-inline: 0; }
 
   .whatsapp-float { width: 4rem; height: 4rem; bottom: 1.8rem; right: 1.8rem; }
+}
+
+/* ================================================================
+   PÁGINAS INTERNAS (imoveis.html e imovel.html)
+   Estilos usados pelo catálogo e pela página de detalhes.
+   ================================================================ */
+
+/* ---------- Faixa de título das páginas internas ---------- */
+.page-hero {
+  background: linear-gradient(160deg, var(--primary-dark) 0%, var(--primary) 100%);
+  padding: 9rem 0 3.5rem;
+  text-align: center;
+}
+.page-hero h1 { color: #f6f3ec; font-size: clamp(1.9rem, 5vw, 3rem); }
+.page-hero p { color: rgba(246, 243, 236, 0.75); margin-top: 0.7rem; }
+
+/* Botão "Ver catálogo completo" abaixo da grade no index */
+.section-more { text-align: center; margin-top: 2.2rem; }
+
+/* Links dentro do título dos cards (mesma cor, sublinha no hover) */
+.property-card__body h3 a { transition: color var(--transition); }
+.property-card__body h3 a:hover { color: var(--gold); }
+
+/* ---------- Página de detalhes ---------- */
+.section--detail { padding-top: 8rem; }
+
+/* Trilha "Início › Venda › Nome do imóvel" */
+.breadcrumb {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  font-size: 0.82rem;
+  color: var(--muted);
+  margin-bottom: 1.8rem;
+}
+.breadcrumb a { color: var(--muted); font-weight: 600; transition: color var(--transition); }
+.breadcrumb a:hover { color: var(--gold); }
+.breadcrumb span:last-child { color: var(--primary); font-weight: 600; }
+
+/* Grade: galeria à esquerda, informações à direita (no desktop) */
+.detail__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+  margin-bottom: 2.5rem;
+}
+
+/* Galeria de fotos */
+.gallery__main {
+  position: relative;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-card);
+  aspect-ratio: 16 / 11;
+}
+.gallery__main img { width: 100%; height: 100%; object-fit: cover; }
+
+.gallery__thumbs {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.6rem;
+  margin-top: 0.6rem;
+}
+.gallery__thumb {
+  border: 2px solid transparent;
+  border-radius: 0.6rem;
+  overflow: hidden;
+  padding: 0;
+  cursor: pointer;
+  background: none;
+  aspect-ratio: 4 / 3;
+  opacity: 0.7;
+  transition: opacity var(--transition), border-color var(--transition), transform var(--transition);
+}
+.gallery__thumb img { width: 100%; height: 100%; object-fit: cover; }
+.gallery__thumb:hover { opacity: 1; transform: translateY(-2px); }
+.gallery__thumb.is-active { opacity: 1; border-color: var(--gold); }
+
+/* Coluna de informações */
+.detail__info h1 { font-size: clamp(1.7rem, 4.5vw, 2.4rem); margin-block: 0.4rem 0.6rem; }
+
+.detail__price {
+  font-family: var(--font-display);
+  font-size: 1.9rem;
+  font-weight: 600;
+  color: var(--primary);
+  margin-bottom: 1.1rem;
+}
+
+.detail__features {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin-bottom: 1.1rem;
+}
+.detail__features span {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--primary);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 0.45rem 1rem;
+}
+
+/* Caixa de custos (condomínio / IPTU) */
+.detail__costs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.4rem;
+  background: var(--gold-soft);
+  border: 1px solid rgba(185, 138, 68, 0.3);
+  border-radius: var(--radius);
+  padding: 0.9rem 1.2rem;
+  font-size: 0.9rem;
+  color: var(--text);
+  margin-bottom: 1.4rem;
+}
+.detail__costs strong { color: var(--primary); margin-right: 0.35rem; }
+
+.detail__actions { display: flex; flex-direction: column; gap: 0.7rem; }
+
+/* Texto longo e características */
+.detail__body { max-width: 46rem; }
+.detail__subtitle { font-size: 1.35rem; margin-block: 1.6rem 0.8rem; }
+.detail__body p { color: var(--muted); margin-bottom: 0.9rem; }
+
+.detail__caracteristicas {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.55rem;
+}
+.detail__caracteristicas li {
+  position: relative;
+  padding-left: 1.6rem;
+  color: var(--text);
+  font-size: 0.95rem;
+}
+.detail__caracteristicas li::before {
+  content: "✓";
+  position: absolute;
+  left: 0;
+  color: var(--gold);
+  font-weight: 700;
+}
+
+/* Mensagem de imóvel não encontrado */
+.detail-notfound {
+  text-align: center;
+  padding: 3rem 1rem;
+}
+.detail-notfound h1 { font-size: clamp(1.6rem, 4vw, 2.2rem); margin-bottom: 0.7rem; }
+.detail-notfound p { color: var(--muted); margin-bottom: 1.6rem; }
+
+/* ---------- Responsivo das páginas internas ---------- */
+@media (min-width: 40em) {
+  .detail__caracteristicas { grid-template-columns: repeat(2, 1fr); }
+  .detail__actions { flex-direction: row; }
+}
+
+@media (min-width: 56.25em) {
+  .detail__grid { grid-template-columns: 1.15fr 0.85fr; gap: 3rem; align-items: start; }
+  .section--detail { padding-top: 9.5rem; }
+  .page-hero { padding-top: 10.5rem; }
 }
