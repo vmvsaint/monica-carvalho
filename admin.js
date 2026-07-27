@@ -756,6 +756,21 @@
     });
   }
 
+  /* Lê um campo já com a unidade aplicada, buscando a regra na lista
+     CAMPOS_COM_UNIDADE. Serve para a hora de salvar não repetir as
+     regras que já estão declaradas lá em cima — quando a regra está
+     escrita em dois lugares, uma hora as duas discordam (foi o que
+     aconteceu com o campo "quartos"). */
+  function valorComUnidade(id) {
+    const campo = $(id);
+    if (!campo) return "";
+
+    const regra = CAMPOS_COM_UNIDADE.find(function (r) { return r.id === id; });
+    if (!regra) return campo.value.trim();
+
+    return formatarComUnidade(campo.value, regra);
+  }
+
   /* ==============================================================
      PARTE 6 — FORMULÁRIO: PREENCHER, LER E SALVAR
      ============================================================== */
@@ -847,7 +862,13 @@
       titulo: $("titulo").value.trim(),
       bairro: $("bairro").value.trim(),
       preco: $("preco").value.trim(),
-      quartos: $("quartos").value.trim(),
+      /* Os três campos com unidade usam a MESMA lista de regras.
+         Isso cobre o caso de o formulário ser enviado com Enter, em
+         que o campo não chega a perder o foco e o "blur" não roda. */
+      quartos: valorComUnidade("quartos"),
+      banheiros: $("banheiros").value.trim(),
+      area: valorComUnidade("area"),
+      vagas: valorComUnidade("vagas"),
       banheiros: $("banheiros").value.trim(),
       /* Passam pela unidade automática também aqui, por garantia */
       area: formatarComUnidade($("area").value, { unidade: "m²" }),
