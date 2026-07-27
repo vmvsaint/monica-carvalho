@@ -62,6 +62,9 @@
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
 
   <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="style.css" />
+  <!-- Estilos dos formulários de contato (novo) -->
+  <link rel="stylesheet" href="formularios.css" />
   <link rel="icon" href="imagens/main-site/logo.png">
 </head>
 <!-- data-page="home" avisa o script.js que esta é a página principal -->
@@ -83,6 +86,8 @@
         <a href="#sobre" class="nav__link">Sobre</a>
         <a href="#atendimento" class="nav__link">Atendimento</a>
         <a href="#imoveis" class="nav__link">Imóveis</a>
+        <!-- Link novo: página de captação de proprietários -->
+        <a href="anuncie-seu-imovel.html" class="nav__link">Anuncie seu imóvel</a>
         <a href="#depoimentos" class="nav__link">Depoimentos</a>
         <a href="#contato" class="nav__link">Contato</a>
       </nav>
@@ -261,6 +266,130 @@ Obrigada.”</p>
         </div>
       </div>
     </section>
+    <!-- ================================================================
+         QUERO COMPRAR OU ALUGAR  ★ FORMULÁRIO NOVO ★
+         ----------------------------------------------------------------
+         Grava na tabela leads_interessados do Supabase.
+         Quem cuida do envio é o arquivo formularios.js.
+         Dentro dele também está a faixa que leva para a página de
+         proprietários (anuncie-seu-imovel.html).
+         ================================================================ -->
+    <section class="section section--tinted interesse" id="quero-imovel" aria-labelledby="interesse-title">
+      <div class="container interesse__grid">
+
+        <!-- Coluna da esquerda: texto -->
+        <div class="interesse__texto reveal">
+          <span class="eyebrow">Curadoria personalizada</span>
+          <h2 id="interesse-title">Me conte o que você procura.</h2>
+          <p>Preencha em um minuto e eu seleciono pessoalmente as opções que fazem sentido para o seu momento — inclusive imóveis que ainda não foram anunciados.</p>
+
+          <ul class="interesse__marcadores">
+            <li>Sem robô: quem lê e responde sou eu.</li>
+            <li>Você recebe as opções antes de qualquer visita.</li>
+            <li>Seus dados não são repassados para terceiros.</li>
+          </ul>
+
+          <!-- Faixa que leva para a página de proprietários -->
+          <a class="faixa-proprietario" href="anuncie-seu-imovel.html">
+            <span>
+              <strong>Na verdade, quero anunciar o meu imóvel</strong>
+              <small>Avaliação gratuita e divulgação profissional</small>
+            </span>
+            <span class="btn btn--outline">Anunciar imóvel</span>
+          </a>
+        </div>
+
+        <!-- Coluna da direita: formulário -->
+        <div class="reveal delay-1">
+          <div class="bezel">
+            <div class="bezel__core">
+
+              <form class="form" id="formInteressado" novalidate>
+                <div class="campo">
+                  <label for="intNome">Seu nome *</label>
+                  <input type="text" id="intNome" required maxlength="120" autocomplete="name" placeholder="Nome e sobrenome" />
+                </div>
+
+                <div class="grade-2">
+                  <div class="campo">
+                    <label for="intTelefone">WhatsApp *</label>
+                    <input type="tel" id="intTelefone" required maxlength="25" autocomplete="tel" placeholder="(21) 99999-9999" />
+                  </div>
+                  <div class="campo">
+                    <label for="intEmail">E-mail</label>
+                    <input type="email" id="intEmail" maxlength="140" autocomplete="email" placeholder="voce@email.com" />
+                  </div>
+                </div>
+
+                <div class="campo">
+                  <span class="campo__rotulo">Você quer: *</span>
+                  <div class="opcoes">
+                    <label class="opcao"><input type="radio" name="interesse" value="comprar" checked /><span>Comprar</span></label>
+                    <label class="opcao"><input type="radio" name="interesse" value="alugar" /><span>Alugar</span></label>
+                    <label class="opcao"><input type="radio" name="interesse" value="investir" /><span>Investir</span></label>
+                  </div>
+                </div>
+
+                <div class="grade-2">
+                  <div class="campo">
+                    <label for="intBairro">Bairro / região</label>
+                    <input type="text" id="intBairro" maxlength="90" placeholder="Ex.: Barra da Tijuca" />
+                  </div>
+                  <div class="campo">
+                    <label for="intFaixa">Faixa de valor</label>
+                    <select id="intFaixa">
+                      <option value="">Selecione…</option>
+                      <option>Até R$ 700 mil</option>
+                      <option>R$ 700 mil a R$ 1,2 milhão</option>
+                      <option>R$ 1,2 a R$ 2 milhões</option>
+                      <option>R$ 2 a R$ 4 milhões</option>
+                      <option>Acima de R$ 4 milhões</option>
+                      <option>Locação até R$ 5 mil/mês</option>
+                      <option>Locação acima de R$ 5 mil/mês</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="campo">
+                  <label for="intMensagem">Algum detalhe importante?</label>
+                  <textarea id="intMensagem" rows="3" maxlength="1200" placeholder="Ex.: preciso de 3 quartos, aceito reformar, tenho pet…"></textarea>
+                </div>
+
+                <label class="aceite">
+                  <input type="checkbox" id="intAceite" required />
+                  <span>Autorizo o contato da Monica Carvalho pelos dados informados. *</span>
+                </label>
+
+                <!-- Campo-armadilha contra robôs (invisível para pessoas) -->
+                <div class="campo-armadilha" aria-hidden="true">
+                  <label for="intSite">Não preencha este campo</label>
+                  <input type="text" id="intSite" tabindex="-1" autocomplete="off" />
+                </div>
+
+                <p class="form__aviso" id="intAviso" role="alert" hidden></p>
+
+                <button type="submit" class="btn btn--primary btn--bloco" id="intEnviar">Quero receber opções</button>
+              </form>
+
+              <!-- Mensagem que aparece no lugar do formulário depois do envio -->
+              <div class="form-sucesso" id="intSucesso" hidden>
+                <span class="form-sucesso__marca" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.1">
+                    <circle cx="12" cy="12" r="9.25" />
+                    <path d="M8 12.5l2.6 2.6L16 9.5" stroke-linecap="round" stroke-linejoin="round" />
+                  </svg>
+                </span>
+                <h3>Recebi seu contato!</h3>
+                <p>Vou separar as opções que combinam com o que você descreveu e retorno em breve.</p>
+                <a href="#" class="btn btn--gold js-whatsapp" target="_blank" rel="noopener">Falar agora no WhatsApp</a>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
 
     <!-- ================================================================
          CHAMADA FINAL (CTA)
@@ -320,8 +449,19 @@ Obrigada.”</p>
     </svg>
   </a>
 
-  <!-- dados.js (contatos + imóveis) precisa vir ANTES do script.js -->
-  <script src="dados.js"></script>
+  <!-- ================================================================
+       SCRIPTS — A ORDEM IMPORTA, não troque a sequência:
+         1. biblioteca do Supabase (vem da internet)
+         2. dados.js          → contatos + lista de reserva dos imóveis
+         3. supabase-config.js → chaves e conexão
+         4. script.js         → motor do site
+         5. formularios.js    → envio do formulário de contato
+       O "defer" faz cada arquivo esperar o anterior terminar.
+       ================================================================ -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.110.8" defer></script>
+  <script src="dados.js" defer></script>
+  <script src="supabase-config.js" defer></script>
   <script src="script.js" defer></script>
+  <script src="formularios.js" defer></script>
 </body>
 </html>

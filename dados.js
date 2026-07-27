@@ -62,7 +62,7 @@ const CONFIG = {
    FOTOS: crie uma pasta chamada "imagens" ao lado do index.html e
    use "imagens/nome-da-foto.jpg", ou cole um link https://...
    ================================================================ */
-const IMOVEIS = [
+let IMOVEIS = [
 
   /* ==============================================================
      ▼▼▼ IMÓVEIS À VENDA ▼▼▼

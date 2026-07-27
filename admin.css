@@ -1,0 +1,764 @@
+/* ================================================================
+   MONICA CARVALHO — admin.css
+   ================================================================
+   Estilos EXCLUSIVOS do painel (admin.html).
+   O style.css continua sendo carregado antes deste arquivo — daqui
+   saem só os componentes que o site normal não tem (formulários,
+   tabelas, cartões do painel).
+
+   As cores vêm das variáveis do style.css (--primary, --gold...),
+   então se você trocar a paleta lá, o painel acompanha sozinho.
+   ================================================================ */
+
+/* ================================================================
+   TOKENS DO PAINEL
+   ================================================================ */
+.admin {
+  /* Curva de animação com "peso": tudo desacelera de forma suave.
+     Evita o efeito robótico do "linear". */
+  --mola: cubic-bezier(0.32, 0.72, 0, 1);
+
+  /* Arredondamentos concêntricos: a casca externa é mais arredondada
+     que o miolo, exatamente como em objetos físicos. */
+  --raio-casca: 2rem;
+  --raio-miolo: 1.625rem;   /* 2rem menos o respiro de 0.375rem */
+
+  --sombra-flutuante: 0 24px 60px -28px rgba(15, 61, 62, 0.34);
+  --linha: rgba(15, 61, 62, 0.09);
+
+  background: var(--bg);
+  min-height: 100dvh;   /* dvh evita o "pulo" da barra do Safari no iPhone */
+}
+
+/* ---------- Textura de papel (film grain) ----------
+   Fica FIXA e sem captar clique. Nunca colocar isso em um elemento
+   que rola junto com a página: derruba o desempenho no celular. */
+.admin-grain {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.035;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* ================================================================
+   "DOUBLE BEZEL" — a casca e o miolo
+   ----------------------------------------------------------------
+   Nenhum cartão fica solto sobre o fundo. Sempre uma casca externa
+   (bandeja) segurando um miolo (placa). Dá sensação de objeto real.
+   ================================================================ */
+.bezel {
+  position: relative;
+  z-index: 1;
+  padding: 0.375rem;                       /* o respiro entre casca e miolo */
+  border-radius: var(--raio-casca);
+  background: rgba(15, 61, 62, 0.045);
+  border: 1px solid var(--linha);
+  margin-bottom: 1.5rem;
+}
+
+.bezel__core {
+  background: var(--surface);
+  border-radius: var(--raio-miolo);
+  padding: 2rem 1.75rem;
+  /* brilho interno no topo: simula luz batendo na borda superior */
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.9),
+              0 10px 30px -22px rgba(15, 61, 62, 0.5);
+  border: 0;
+}
+
+.bezel__core--tabela { padding: 0.75rem; }
+
+/* ================================================================
+   BOTÕES "PÍLULA" (com ícone dentro de um círculo próprio)
+   ================================================================ */
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.85rem 0.85rem 0.85rem 1.6rem;
+  border: 0;
+  border-radius: 999px;
+  font-family: var(--font-body);
+  font-size: 0.92rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  cursor: pointer;
+  text-decoration: none;
+  transition: transform 0.55s var(--mola), background-color 0.55s var(--mola),
+              color 0.55s var(--mola), box-shadow 0.55s var(--mola);
+}
+
+/* Sem ícone dentro? Então o respiro da direita volta ao normal */
+.pill:not(:has(.pill__icone)) { padding-right: 1.6rem; }
+
+.pill:active { transform: scale(0.975); }   /* sensação de apertar */
+
+.pill--primary {
+  background: var(--primary);
+  color: #f6f3ec;
+  box-shadow: 0 14px 30px -18px rgba(15, 61, 62, 0.9);
+}
+.pill--primary:hover { background: var(--primary-dark); }
+
+.pill--gold { background: var(--gold); color: #fff; }
+.pill--gold:hover { background: #a5772f; }
+
+.pill--ghost {
+  background: transparent;
+  color: var(--primary);
+  box-shadow: inset 0 0 0 1px var(--linha);
+}
+.pill--ghost:hover { background: rgba(15, 61, 62, 0.05); }
+
+.pill--perigo { background: transparent; color: #9d2f2f; box-shadow: inset 0 0 0 1px rgba(157, 47, 47, 0.28); }
+.pill--perigo:hover { background: rgba(157, 47, 47, 0.08); }
+
+.pill--sm { padding: 0.55rem 1.1rem; font-size: 0.82rem; }
+.pill--sm .pill__icone { width: 1.5rem; height: 1.5rem; }
+
+/* O círculo que abraça a setinha/ícone: "botão dentro do botão" */
+.pill__icone {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.16);
+  transition: transform 0.55s var(--mola), background-color 0.55s var(--mola);
+}
+.pill--ghost .pill__icone { background: rgba(15, 61, 62, 0.07); }
+
+/* Ao passar o mouse, o círculo interno se desloca na diagonal:
+   cria uma tensão sutil dentro do próprio botão. */
+.pill:hover .pill__icone { transform: translate(3px, -1px) scale(1.06); }
+
+.pill[disabled] { opacity: 0.5; cursor: not-allowed; }
+.pill[disabled]:hover .pill__icone { transform: none; }
+
+/* Botão que parece um link (usado dentro de dicas) */
+.link-botao {
+  background: none;
+  border: 0;
+  padding: 0;
+  font: inherit;
+  color: var(--gold);
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* ================================================================
+   TELA DE LOGIN
+   ================================================================ */
+.admin-login {
+  position: relative;
+  z-index: 1;
+  min-height: 100dvh;
+  display: grid;
+  place-items: center;
+  padding: 3rem 1.25rem;
+}
+
+.bezel--login { width: min(100%, 30rem); margin: 0; }
+.bezel--login .bezel__core { padding: 2.75rem 2rem; }
+
+.admin-login__title { margin-bottom: 0.75rem; }
+.admin-login__lead { color: var(--muted); margin-bottom: 2rem; font-size: 0.95rem; }
+
+.admin-login__rodape {
+  margin-top: 1.75rem;
+  font-size: 0.8rem;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+/* ================================================================
+   FORMULÁRIOS (login, imóvel, leads)
+   ================================================================ */
+.campo { margin-bottom: 1.35rem; }
+.campo:last-child { margin-bottom: 0; }
+
+.campo > label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--primary);
+}
+
+.campo input[type="text"],
+.campo input[type="email"],
+.campo input[type="tel"],
+.campo input[type="number"],
+.campo input[type="password"],
+.campo select,
+.campo textarea {
+  width: 100%;
+  padding: 0.9rem 1.05rem;
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  color: var(--text);
+  background: #fcfbf8;
+  border: 0;
+  border-radius: 0.85rem;
+  /* a "borda" é um anel interno bem discreto, nunca um 1px cinza duro */
+  box-shadow: inset 0 0 0 1px var(--linha);
+  transition: box-shadow 0.5s var(--mola), background-color 0.5s var(--mola);
+}
+
+.campo textarea { resize: vertical; line-height: 1.65; min-height: 6rem; }
+
+.campo input:focus,
+.campo select:focus,
+.campo textarea:focus {
+  outline: none;
+  background: #fff;
+  box-shadow: inset 0 0 0 1.5px var(--gold), 0 0 0 4px var(--gold-soft);
+}
+
+.campo__dica {
+  display: block;
+  margin-top: 0.5rem;
+  font-size: 0.78rem;
+  line-height: 1.55;
+  color: var(--muted);
+}
+
+/* Duas colunas que viram uma só no celular */
+.grade-2 {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.25rem;
+}
+
+.bloco__titulo {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  font-weight: 500;
+  color: var(--primary);
+  margin-bottom: 0.5rem;
+  padding: 0;
+}
+
+.bloco__ajuda {
+  font-size: 0.85rem;
+  color: var(--muted);
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
+}
+.bloco__ajuda--nota { margin: 1.25rem 0 0; }
+
+.form--imovel fieldset { border: 0; padding: 0; margin: 0; }
+
+.form__acoes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.85rem;
+  padding-top: 0.5rem;
+  padding-bottom: 3rem;
+}
+
+.form__aviso {
+  margin: 0 0 1.25rem;
+  padding: 0.9rem 1.1rem;
+  border-radius: 0.85rem;
+  font-size: 0.88rem;
+  line-height: 1.55;
+  background: rgba(157, 47, 47, 0.08);
+  color: #7d2323;
+  box-shadow: inset 0 0 0 1px rgba(157, 47, 47, 0.2);
+}
+.form__aviso.is-ok {
+  background: rgba(37, 122, 84, 0.09);
+  color: #1d5c40;
+  box-shadow: inset 0 0 0 1px rgba(37, 122, 84, 0.22);
+}
+
+/* ---------- Seletor segmentado (Venda / Locação / Lançamento) ---------- */
+.segmentado {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.5rem;
+  padding: 0.375rem;
+  background: rgba(15, 61, 62, 0.05);
+  border-radius: 1.15rem;
+}
+
+.segmentado__op { position: relative; }
+.segmentado__op input { position: absolute; opacity: 0; inset: 0; cursor: pointer; }
+
+.segmentado__op span {
+  display: block;
+  text-align: center;
+  padding: 0.75rem 0.5rem;
+  border-radius: 0.85rem;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--muted);
+  background: transparent;
+  transition: background-color 0.5s var(--mola), color 0.5s var(--mola),
+              transform 0.5s var(--mola);
+}
+
+.segmentado__op input:checked + span {
+  background: var(--surface);
+  color: var(--primary);
+  box-shadow: 0 6px 16px -10px rgba(15, 61, 62, 0.55);
+}
+.segmentado__op input:focus-visible + span { box-shadow: 0 0 0 3px var(--gold-soft); }
+
+/* ---------- Chave liga/desliga ---------- */
+.campo--switch { display: flex; flex-direction: column; justify-content: center; }
+
+.switch { display: inline-flex; align-items: center; gap: 0.75rem; cursor: pointer; }
+.switch input { position: absolute; opacity: 0; width: 0; height: 0; }
+
+.switch__trilho {
+  position: relative;
+  width: 3.1rem;
+  height: 1.75rem;
+  border-radius: 999px;
+  background: rgba(15, 61, 62, 0.16);
+  transition: background-color 0.5s var(--mola);
+  flex-shrink: 0;
+}
+.switch__trilho::after {
+  content: "";
+  position: absolute;
+  top: 0.22rem;
+  left: 0.22rem;
+  width: 1.31rem;
+  height: 1.31rem;
+  border-radius: 999px;
+  background: #fff;
+  box-shadow: 0 2px 6px rgba(15, 61, 62, 0.3);
+  transition: transform 0.5s var(--mola);
+}
+.switch input:checked + .switch__trilho { background: var(--primary); }
+.switch input:checked + .switch__trilho::after { transform: translateX(1.35rem); }
+
+.switch__texto { font-size: 0.9rem; font-weight: 600; color: var(--primary); }
+
+/* ================================================================
+   ÁREA DE ENVIO DE FOTOS
+   ================================================================ */
+.dropzone {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 2.75rem 1.5rem;
+  text-align: center;
+  border-radius: 1.35rem;
+  background: #fcfbf8;
+  box-shadow: inset 0 0 0 1.5px rgba(15, 61, 62, 0.12);
+  cursor: pointer;
+  transition: background-color 0.55s var(--mola), box-shadow 0.55s var(--mola),
+              transform 0.55s var(--mola);
+}
+.dropzone:hover, .dropzone.is-over {
+  background: #fff;
+  box-shadow: inset 0 0 0 1.5px var(--gold);
+  transform: translateY(-2px);
+}
+.dropzone strong { font-size: 0.98rem; color: var(--primary); }
+.dropzone small { font-size: 0.8rem; color: var(--muted); }
+.dropzone__icone { color: var(--gold); margin-bottom: 0.35rem; }
+
+.progresso {
+  margin-top: 1rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--gold);
+}
+
+/* ---------- Miniaturas das fotos ---------- */
+.fotos-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 13.5rem), 1fr));
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.foto-card {
+  padding: 0.3rem;
+  border-radius: 1.25rem;
+  background: rgba(15, 61, 62, 0.05);
+  box-shadow: inset 0 0 0 1px var(--linha);
+  transition: transform 0.55s var(--mola);
+}
+.foto-card:hover { transform: translateY(-3px); }
+.foto-card.is-capa { background: var(--gold-soft); box-shadow: inset 0 0 0 1px rgba(185, 138, 68, 0.45); }
+
+.foto-card__miolo {
+  background: var(--surface);
+  border-radius: 0.95rem;
+  overflow: hidden;
+}
+
+.foto-card__img {
+  position: relative;
+  aspect-ratio: 1 / 1;   /* as fotos ficam 1000x1000, então quadradas */
+  background: #ece7dc;
+}
+.foto-card__img img { width: 100%; height: 100%; object-fit: cover; }
+
+.foto-card__tag {
+  position: absolute;
+  top: 0.55rem;
+  left: 0.55rem;
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  background: var(--gold);
+  color: #fff;
+}
+
+.foto-card__corpo { padding: 0.75rem; }
+.foto-card__corpo select {
+  width: 100%;
+  padding: 0.5rem 0.6rem;
+  font-family: var(--font-body);
+  font-size: 0.82rem;
+  color: var(--text);
+  background: #fcfbf8;
+  border: 0;
+  border-radius: 0.6rem;
+  box-shadow: inset 0 0 0 1px var(--linha);
+}
+
+.foto-card__acoes {
+  display: flex;
+  gap: 0.35rem;
+  margin-top: 0.6rem;
+}
+.foto-card__acoes button {
+  flex: 1;
+  padding: 0.42rem 0.3rem;
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--muted);
+  background: transparent;
+  border: 0;
+  border-radius: 0.55rem;
+  box-shadow: inset 0 0 0 1px var(--linha);
+  cursor: pointer;
+  transition: background-color 0.45s var(--mola), color 0.45s var(--mola);
+}
+.foto-card__acoes button:hover { background: rgba(15, 61, 62, 0.06); color: var(--primary); }
+.foto-card__acoes button.eh-remover:hover { background: rgba(157, 47, 47, 0.09); color: #9d2f2f; }
+
+/* ================================================================
+   BARRA SUPERIOR DO PAINEL (ilha flutuante, descolada do topo)
+   ================================================================ */
+.admin-app { position: relative; z-index: 1; padding-bottom: 4rem; }
+
+.admin-bar {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  padding: 1.25rem 1.25rem 0.75rem;
+}
+
+.admin-bar__inner {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  width: min(100% , 78rem);
+  margin-inline: auto;
+  padding: 0.6rem 0.85rem;
+  border-radius: 999px;
+  /* o desfoque só é usado aqui, num elemento fixo — nunca em áreas
+     grandes que rolam, senão o celular engasga */
+  background: rgba(250, 248, 244, 0.82);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.7),
+              var(--sombra-flutuante);
+}
+
+.admin-bar__logo { display: flex; align-items: center; gap: 0.6rem; text-decoration: none; }
+.admin-bar__logo-txt { display: flex; flex-direction: column; line-height: 1.15; }
+.admin-bar__logo-txt strong { font-size: 0.92rem; color: var(--primary); }
+.admin-bar__logo-txt small { font-size: 0.64rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
+
+.admin-tabs { display: flex; gap: 0.3rem; margin-inline: auto; }
+
+.admin-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.6rem 1.1rem;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  font-family: var(--font-body);
+  font-size: 0.86rem;
+  font-weight: 600;
+  color: var(--muted);
+  cursor: pointer;
+  transition: background-color 0.5s var(--mola), color 0.5s var(--mola);
+}
+.admin-tab:hover { color: var(--primary); background: rgba(15, 61, 62, 0.05); }
+.admin-tab.is-active { background: var(--primary); color: #f6f3ec; }
+
+.admin-tab__contador {
+  min-width: 1.4rem;
+  padding: 0.05rem 0.35rem;
+  border-radius: 999px;
+  font-size: 0.68rem;
+  background: rgba(15, 61, 62, 0.1);
+  color: inherit;
+}
+.admin-tab.is-active .admin-tab__contador { background: rgba(255, 255, 255, 0.2); }
+
+.admin-bar__conta { display: flex; align-items: center; gap: 0.75rem; }
+.admin-bar__email { font-size: 0.78rem; color: var(--muted); }
+
+/* ================================================================
+   CONTEÚDO
+   ================================================================ */
+.admin-main {
+  width: min(100% - 2.5rem, 78rem);
+  margin-inline: auto;
+  padding-top: 3rem;
+}
+
+.admin-aba { display: none; }
+.admin-aba.is-active { display: block; }
+
+.admin-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+.admin-head h2 { font-size: clamp(1.5rem, 3.5vw, 2.1rem); }
+.admin-head__sub { margin-top: 0.5rem; color: var(--muted); font-size: 0.9rem; max-width: 34rem; }
+
+/* ---------- Filtros ---------- */
+.admin-filtros { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 2rem; }
+
+.chip {
+  padding: 0.55rem 1.15rem;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  box-shadow: inset 0 0 0 1px var(--linha);
+  font-family: var(--font-body);
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--muted);
+  cursor: pointer;
+  transition: transform 0.5s var(--mola), background-color 0.5s var(--mola), color 0.5s var(--mola);
+}
+.chip:hover { transform: translateY(-2px); color: var(--primary); }
+.chip.is-active { background: var(--primary); color: #f6f3ec; box-shadow: none; }
+
+/* ---------- Cartões dos imóveis no painel ---------- */
+.admin-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 20rem), 1fr));
+  gap: 1.25rem;
+  padding-bottom: 3rem;
+}
+
+.admin-card {
+  padding: 0.375rem;
+  border-radius: var(--raio-casca);
+  background: rgba(15, 61, 62, 0.045);
+  box-shadow: inset 0 0 0 1px var(--linha);
+  /* entrada suave: começa levemente embaixo e desfocada */
+  opacity: 0;
+  transform: translateY(1.5rem);
+  filter: blur(6px);
+  transition: opacity 0.8s var(--mola), transform 0.8s var(--mola), filter 0.8s var(--mola);
+}
+.admin-card.is-visible { opacity: 1; transform: none; filter: none; }
+.admin-card.esta-oculto { opacity: 0.58; }
+
+.admin-card__miolo {
+  background: var(--surface);
+  border-radius: var(--raio-miolo);
+  overflow: hidden;
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.9);
+}
+
+.admin-card__foto { position: relative; aspect-ratio: 16 / 11; background: #ece7dc; }
+.admin-card__foto img { width: 100%; height: 100%; object-fit: cover; }
+
+.admin-card__etiqueta {
+  position: absolute;
+  top: 0.85rem;
+  left: 0.85rem;
+  padding: 0.3rem 0.75rem;
+  border-radius: 999px;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  background: var(--primary);
+  color: #f6f3ec;
+}
+.admin-card__etiqueta--gold { background: var(--gold); }
+
+.admin-card__rascunho {
+  position: absolute;
+  top: 0.85rem;
+  right: 0.85rem;
+  padding: 0.3rem 0.75rem;
+  border-radius: 999px;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  background: rgba(29, 42, 40, 0.82);
+  color: #f6f3ec;
+}
+
+.admin-card__corpo { padding: 1.25rem 1.35rem 1.35rem; }
+.admin-card__local { font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
+.admin-card__titulo { margin: 0.4rem 0 0.35rem; font-size: 1.15rem; }
+.admin-card__preco { font-family: var(--font-display); font-size: 1.25rem; color: var(--gold); margin-bottom: 0.35rem; }
+.admin-card__meta { font-size: 0.8rem; color: var(--muted); }
+
+.admin-card__acoes { display: flex; flex-wrap: wrap; gap: 0.45rem; margin-top: 1.15rem; }
+.admin-card__acoes .pill { flex: 1 1 auto; justify-content: center; }
+
+.admin-vazio {
+  grid-column: 1 / -1;
+  padding: 3.5rem 1.5rem;
+  text-align: center;
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
+/* ================================================================
+   TABELAS DE LEADS
+   ================================================================ */
+.tabela-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+
+.tabela { width: 100%; border-collapse: collapse; font-size: 0.86rem; min-width: 52rem; }
+
+.tabela thead th {
+  padding: 0.9rem 0.85rem;
+  text-align: left;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+.tabela tbody td {
+  padding: 0.95rem 0.85rem;
+  vertical-align: top;
+  color: var(--text);
+  border-top: 1px solid var(--linha);
+}
+
+.tabela tbody tr { transition: background-color 0.45s var(--mola); }
+.tabela tbody tr:hover { background: rgba(15, 61, 62, 0.028); }
+
+.tabela a { color: var(--primary); text-decoration: underline; text-underline-offset: 3px; }
+
+.tabela select {
+  padding: 0.4rem 0.55rem;
+  font-family: var(--font-body);
+  font-size: 0.78rem;
+  border: 0;
+  border-radius: 0.55rem;
+  background: #fcfbf8;
+  box-shadow: inset 0 0 0 1px var(--linha);
+  color: var(--text);
+}
+
+.td-msg { max-width: 20rem; font-size: 0.82rem; color: var(--muted); line-height: 1.55; }
+.td-data { white-space: nowrap; font-size: 0.78rem; color: var(--muted); }
+
+.btn-lixeira {
+  padding: 0.4rem 0.7rem;
+  border: 0;
+  border-radius: 0.55rem;
+  background: transparent;
+  box-shadow: inset 0 0 0 1px rgba(157, 47, 47, 0.22);
+  color: #9d2f2f;
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.45s var(--mola);
+}
+.btn-lixeira:hover { background: rgba(157, 47, 47, 0.09); }
+
+/* ================================================================
+   AVISINHO DE CANTO (toast)
+   ================================================================ */
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: 1.75rem;
+  z-index: 40;
+  padding: 0.9rem 1.5rem;
+  border-radius: 999px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: #f6f3ec;
+  background: rgba(15, 61, 62, 0.95);
+  box-shadow: var(--sombra-flutuante);
+  transform: translate(-50%, 1.5rem);
+  opacity: 0;
+  transition: opacity 0.6s var(--mola), transform 0.6s var(--mola);
+}
+.toast.is-visible { opacity: 1; transform: translate(-50%, 0); }
+.toast.eh-erro { background: rgba(125, 35, 35, 0.95); }
+
+/* ================================================================
+   CELULAR (abaixo de 768px tudo vira uma coluna só)
+   ================================================================ */
+@media (max-width: 768px) {
+  .admin-main { width: 100%; padding-inline: 1rem; padding-top: 2rem; }
+
+  .admin-bar { padding: 0.75rem 0.75rem 0.5rem; }
+  .admin-bar__inner {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.75rem;
+    border-radius: 1.5rem;
+    padding: 0.85rem;
+  }
+  .admin-tabs { order: 3; width: 100%; justify-content: center; flex-wrap: wrap; }
+  .admin-bar__conta { margin-left: auto; }
+  .admin-bar__email { display: none; }
+
+  .grade-2 { grid-template-columns: 1fr; }
+  .bezel__core { padding: 1.5rem 1.15rem; }
+  .bezel { padding: 0.3rem; margin-bottom: 1.15rem; }
+
+  .admin-head { flex-direction: column; align-items: stretch; }
+  .admin-head .pill { justify-content: center; }
+
+  .segmentado { grid-template-columns: 1fr; }
+  .form__acoes .pill { flex: 1; justify-content: center; }
+}
+
+/* Quem prefere menos animação no sistema não recebe movimento */
+@media (prefers-reduced-motion: reduce) {
+  .admin *,
+  .admin *::before,
+  .admin *::after { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; }
+  .admin-card { opacity: 1; transform: none; filter: none; }
+}

@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <!-- ================================================================
+       PÁGINA: PAINEL ADMINISTRATIVO (admin.html)
+       ----------------------------------------------------------------
+       Página PRIVADA. Só abre com e-mail e senha cadastrados no
+       Supabase (Authentication → Users) E que estejam na tabela
+       "admins" (veja o supabase-setup.sql, PARTE 6).
+
+       O que dá para fazer aqui:
+         • Cadastrar, editar, desativar e apagar imóveis
+         • Enviar fotos (viram 1000x1000 .webp automaticamente)
+         • Dizer qual cômodo é cada foto
+         • Ver e exportar os leads (compradores e proprietários)
+
+       ⚠ Esta página tem "noindex": o Google não vai indexar ela.
+       O endereço é admin.html — não divulgue esse link.
+       ================================================================ -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex, nofollow" />
+
+  <title>Painel · Monica Carvalho</title>
+  <meta name="theme-color" content="#0f3d3e" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- style.css traz as cores e fontes do site; admin.css traz o
+       visual exclusivo do painel -->
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="admin.css" />
+  <link rel="icon" href="imagens/main-site/logo.png" />
+</head>
+<body class="admin" data-page="admin">
+
+  <!-- Textura de papel: fica fixa no fundo, não atrapalha o clique -->
+  <div class="admin-grain" aria-hidden="true"></div>
+
+  <!-- ================================================================
+       1. TELA DE LOGIN
+       Aparece enquanto ninguém estiver logado.
+       ================================================================ -->
+  <section class="admin-login" id="telaLogin" hidden>
+    <div class="bezel bezel--login">
+      <div class="bezel__core">
+        <span class="eyebrow">Área restrita</span>
+        <h1 class="admin-login__title">Painel de imóveis</h1>
+        <p class="admin-login__lead">Entre com o e-mail e a senha cadastrados para gerenciar os anúncios e os contatos recebidos.</p>
+
+        <form class="form" id="formLogin" autocomplete="on">
+          <div class="campo">
+            <label for="loginEmail">E-mail</label>
+            <input type="email" id="loginEmail" name="email" required autocomplete="username" placeholder="monica@exemplo.com" />
+          </div>
+
+          <div class="campo">
+            <label for="loginSenha">Senha</label>
+            <input type="password" id="loginSenha" name="senha" required autocomplete="current-password" placeholder="••••••••" />
+          </div>
+
+          <!-- Aqui aparecem os avisos de erro do login -->
+          <p class="form__aviso" id="loginAviso" role="alert" hidden></p>
+
+          <button type="submit" class="pill pill--primary" id="btnEntrar">
+            <span>Entrar no painel</span>
+            <span class="pill__icone" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.25">
+                <path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </span>
+          </button>
+        </form>
+
+        <p class="admin-login__rodape">
+          Esqueceu a senha? Ela pode ser redefinida no painel do Supabase, em Authentication&nbsp;→&nbsp;Users.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================================
+       2. PAINEL (só aparece depois do login)
+       ================================================================ -->
+  <div class="admin-app" id="painel" hidden>
+
+    <!-- ---------- Cabeçalho flutuante ---------- -->
+    <header class="admin-bar">
+      <div class="admin-bar__inner">
+        <a href="index.html" class="admin-bar__logo" aria-label="Ver o site">
+          <span class="logo__badge">MC</span>
+          <span class="admin-bar__logo-txt"><strong>Painel</strong><small>Monica Carvalho</small></span>
+        </a>
+
+        <nav class="admin-tabs" id="abas" aria-label="Seções do painel">
+          <button class="admin-tab is-active" data-aba="imoveis" type="button">Imóveis</button>
+          <button class="admin-tab" data-aba="interessados" type="button">
+            Compradores <span class="admin-tab__contador" id="contInteressados">0</span>
+          </button>
+          <button class="admin-tab" data-aba="proprietarios" type="button">
+            Proprietários <span class="admin-tab__contador" id="contProprietarios">0</span>
+          </button>
+        </nav>
+
+        <div class="admin-bar__conta">
+          <span class="admin-bar__email" id="emailLogado"></span>
+          <button class="pill pill--ghost pill--sm" id="btnSair" type="button">
+            <span>Sair</span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <main class="admin-main">
+
+      <!-- ============================================================
+           ABA 1 — IMÓVEIS
+           ============================================================ -->
+      <section class="admin-aba is-active" id="abaImoveis">
+
+        <!-- ---------- 1.A LISTA DE IMÓVEIS ---------- -->
+        <div id="areaLista">
+          <div class="admin-head">
+            <div>
+              <span class="eyebrow">Catálogo</span>
+              <h2>Imóveis cadastrados</h2>
+              <p class="admin-head__sub" id="resumoImoveis">Carregando…</p>
+            </div>
+
+            <button class="pill pill--primary" id="btnNovoImovel" type="button">
+              <span>Cadastrar imóvel</span>
+              <span class="pill__icone" aria-hidden="true">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.25">
+                  <path d="M12 5v14M5 12h14" stroke-linecap="round" />
+                </svg>
+              </span>
+            </button>
+          </div>
+
+          <!-- Filtro rápido por tipo -->
+          <div class="admin-filtros" id="filtrosImoveis" role="group" aria-label="Filtrar por tipo">
+            <button class="chip is-active" data-filtro="todos" type="button">Todos</button>
+            <button class="chip" data-filtro="venda" type="button">Venda</button>
+            <button class="chip" data-filtro="locacao" type="button">Locação</button>
+            <button class="chip" data-filtro="lancamento" type="button">Lançamentos</button>
+          </div>
+
+          <!-- O admin.js insere os cartões dos imóveis aqui dentro -->
+          <div class="admin-grid" id="listaImoveis" aria-live="polite"></div>
+        </div>
+
+        <!-- ---------- 1.B FORMULÁRIO DE CADASTRO/EDIÇÃO ---------- -->
+        <!-- Começa escondido; aparece ao clicar em "Cadastrar imóvel"
+             ou em "Editar" num cartão. -->
+        <div id="areaFormulario" hidden>
+          <div class="admin-head">
+            <div>
+              <span class="eyebrow" id="formEtiqueta">Novo cadastro</span>
+              <h2 id="formTitulo">Cadastrar imóvel</h2>
+              <p class="admin-head__sub">Os campos marcados com <strong>*</strong> são obrigatórios. O que ficar vazio simplesmente não aparece no site.</p>
+            </div>
+
+            <button class="pill pill--ghost" id="btnVoltarLista" type="button">
+              <span>Voltar para a lista</span>
+            </button>
+          </div>
+
+          <form class="form form--imovel" id="formImovel">
+            <!-- Guarda o id do imóvel quando está editando (vazio = novo) -->
+            <input type="hidden" id="imovelId" />
+            <!-- Guarda o nome da pasta das fotos no Storage -->
+            <input type="hidden" id="imovelPasta" />
+
+            <!-- ===== BLOCO: TIPO DE ANÚNCIO ===== -->
+            <div class="bezel">
+              <fieldset class="bezel__core">
+                <legend class="bloco__titulo">1. Que tipo de anúncio é este? *</legend>
+                <p class="bloco__ajuda">Define em qual filtro do site o imóvel vai aparecer (Venda, Locação ou Lançamentos).</p>
+
+                <div class="segmentado" id="campoTipo">
+                  <label class="segmentado__op">
+                    <input type="radio" name="tipo" value="venda" checked />
+                    <span>Venda</span>
+                  </label>
+                  <label class="segmentado__op">
+                    <input type="radio" name="tipo" value="locacao" />
+                    <span>Locação</span>
+                  </label>
+                  <label class="segmentado__op">
+                    <input type="radio" name="tipo" value="lancamento" />
+                    <span>Lançamento</span>
+                  </label>
+                </div>
+              </fieldset>
+            </div>
+
+            <!-- ===== BLOCO: IDENTIFICAÇÃO ===== -->
+            <div class="bezel">
+              <fieldset class="bezel__core">
+                <legend class="bloco__titulo">2. Identificação do imóvel</legend>
+
+                <div class="campo">
+                  <label for="titulo">Nome do anúncio *</label>
+                  <input type="text" id="titulo" required maxlength="120" placeholder="Ex.: Cielo Vitta" />
+                  <small class="campo__dica">É o título grande que aparece no card e na página do imóvel.</small>
+                </div>
+
+                <div class="campo">
+                  <label for="bairro">Localização *</label>
+                  <input type="text" id="bairro" required maxlength="160" placeholder="Ex.: Barra da Tijuca · Mundo Novo" />
+                  <small class="campo__dica">Use o símbolo · para separar bairro e condomínio, como já é feito no site.</small>
+                </div>
+
+                <div class="campo">
+                  <label for="preco">Valor *</label>
+                  <input type="text" id="preco" required maxlength="60" placeholder="Ex.: R$ 1.490.000  ou  R$ 13.000/mês" />
+                  <small class="campo__dica">Escreva do jeito que deve aparecer, com R$ e pontos. Em locação, lembre do "/mês".</small>
+                </div>
+              </fieldset>
+            </div>
+
+            <!-- ===== BLOCO: FICHA TÉCNICA ===== -->
+            <div class="bezel">
+              <fieldset class="bezel__core">
+                <legend class="bloco__titulo">3. Ficha técnica</legend>
+                <p class="bloco__ajuda">Esses quatro dados aparecem com ícones no card e na página de detalhes.</p>
+
+                <div class="grade-2">
+                  <div class="campo">
+                    <label for="quartos">Quartos *</label>
+                    <input type="text" id="quartos" required maxlength="40" placeholder="Ex.: 3 quartos" />
+                  </div>
+                  <div class="campo">
+                    <label for="banheiros">Banheiros / suítes</label>
+                    <input type="text" id="banheiros" maxlength="40" placeholder="Ex.: 3 suítes" />
+                    <small class="campo__dica">Opcional. Só aparece na página de detalhes.</small>
+                  </div>
+                  <div class="campo">
+                    <label for="area">Área *</label>
+                    <input type="text" id="area" required maxlength="40" placeholder="Ex.: 92 m²" />
+                  </div>
+                  <div class="campo">
+                    <label for="vagas">Vagas *</label>
+                    <input type="text" id="vagas" required maxlength="40" placeholder="Ex.: 2 vagas" />
+                  </div>
+                </div>
+              </fieldset>
+            </div>
+
+            <!-- ===== BLOCO: CUSTOS ===== -->
+            <div class="bezel">
+              <fieldset class="bezel__core">
+                <legend class="bloco__titulo">4. Custos mensais</legend>
+
+                <div class="grade-2">
+                  <div class="campo">
+                    <label for="condominio">Condomínio</label>
+                    <input type="text" id="condominio" maxlength="60" placeholder="Ex.: R$ 1.900/mês" />
+                  </div>
+                  <div class="campo">
+                    <label for="iptu">IPTU</label>
+                    <input type="text" id="iptu" maxlength="60" placeholder="Ex.: R$ 350/mês" />
+                  </div>
+                </div>
+
+                <div class="campo">
+                  <label for="descricao">Linha resumida do card *</label>
+                  <input type="text" id="descricao" required maxlength="120" placeholder="Ex.: Cond. R$1.900 · IPTU R$350" />
+                  <small class="campo__dica">
+                    É a frase curta logo abaixo do título no card.
+                    <button type="button" class="link-botao" id="btnGerarResumo">Preencher com condomínio e IPTU</button>
+                  </small>
+                </div>
+              </fieldset>
+            </div>
+
+            <!-- ===== BLOCO: TEXTOS ===== -->
+            <div class="bezel">
+              <fieldset class="bezel__core">
+                <legend class="bloco__titulo">5. Descrição completa</legend>
+
+                <div class="campo">
+                  <label for="descricaoCompleta">Texto do anúncio *</label>
+                  <textarea id="descricaoCompleta" rows="10" required
+                    placeholder="Escreva normalmente.&#10;&#10;Deixe uma linha em branco entre um parágrafo e outro — o site transforma isso em parágrafos separados."></textarea>
+                  <small class="campo__dica">Linha em branco = parágrafo novo na página do imóvel.</small>
+                </div>
+
+                <div class="campo">
+                  <label for="caracteristicas">Diferenciais (um por linha)</label>
+                  <textarea id="caracteristicas" rows="7"
+                    placeholder="Vista mar&#10;Andar alto&#10;Balsa para praia&#10;Cozinha planejada"></textarea>
+                  <small class="campo__dica">Cada linha vira um item da lista "Características" na página do imóvel.</small>
+                </div>
+              </fieldset>
+            </div>
+
+            <!-- ===== BLOCO: FOTOS ===== -->
+            <div class="bezel">
+              <fieldset class="bezel__core">
+                <legend class="bloco__titulo">6. Fotos do imóvel</legend>
+                <p class="bloco__ajuda">
+                  Toda foto enviada é <strong>redimensionada para 1000&nbsp;×&nbsp;1000</strong> e
+                  <strong>convertida para .webp</strong> automaticamente, aqui no navegador, antes de subir.
+                  Para cada foto, escolha de que cômodo ela é.
+                </p>
+
+                <!-- Área de envio -->
+                <label class="dropzone" id="dropzone">
+                  <input type="file" id="inputFotos" accept="image/*" multiple hidden />
+                  <span class="dropzone__icone" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1">
+                      <rect x="3" y="5" width="18" height="14" rx="2.5" />
+                      <circle cx="8.5" cy="10" r="1.5" />
+                      <path d="M3 16l4.5-4.5 4 4L15 12l6 5.5" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                  </span>
+                  <strong>Clique aqui ou arraste as fotos</strong>
+                  <small>JPG, PNG, HEIC ou WEBP · pode selecionar várias de uma vez</small>
+                </label>
+
+                <!-- Barra de progresso do processamento -->
+                <p class="progresso" id="progressoFotos" hidden></p>
+
+                <!-- As miniaturas processadas entram aqui -->
+                <div class="fotos-grid" id="listaFotos"></div>
+
+                <p class="bloco__ajuda bloco__ajuda--nota">
+                  A <strong>primeira foto</strong> da lista é a capa (a que aparece no card).
+                  Use as setas para reordenar ou o botão <em>Capa</em> para promover qualquer foto.
+                </p>
+              </fieldset>
+            </div>
+
+            <!-- ===== BLOCO: PUBLICAÇÃO ===== -->
+            <div class="bezel">
+              <fieldset class="bezel__core">
+                <legend class="bloco__titulo">7. Publicação</legend>
+
+                <div class="grade-2">
+                  <div class="campo">
+                    <label for="ordem">Posição na listagem</label>
+                    <input type="number" id="ordem" value="0" step="1" />
+                    <small class="campo__dica">Número menor aparece primeiro. Pode deixar 0.</small>
+                  </div>
+
+                  <div class="campo campo--switch">
+                    <label class="switch">
+                      <input type="checkbox" id="ativo" checked />
+                      <span class="switch__trilho" aria-hidden="true"></span>
+                      <span class="switch__texto">Publicado no site</span>
+                    </label>
+                    <small class="campo__dica">Desmarque para guardar o cadastro sem exibir no site.</small>
+                  </div>
+                </div>
+              </fieldset>
+            </div>
+
+            <!-- Avisos de erro/sucesso do formulário -->
+            <p class="form__aviso" id="formAviso" role="alert" hidden></p>
+
+            <!-- ===== BOTÕES FINAIS ===== -->
+            <div class="form__acoes">
+              <button type="submit" class="pill pill--primary" id="btnSalvar">
+                <span>Salvar imóvel</span>
+                <span class="pill__icone" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.25">
+                    <path d="M5 12.5l4.5 4.5L19 7" stroke-linecap="round" stroke-linejoin="round" />
+                  </svg>
+                </span>
+              </button>
+              <button type="button" class="pill pill--ghost" id="btnCancelar">
+                <span>Cancelar</span>
+              </button>
+            </div>
+          </form>
+        </div>
+      </section>
+
+      <!-- ============================================================
+           ABA 2 — LEADS INTERESSADOS (comprar / alugar)
+           ============================================================ -->
+      <section class="admin-aba" id="abaInteressados" hidden>
+        <div class="admin-head">
+          <div>
+            <span class="eyebrow">Leads</span>
+            <h2>Quem quer comprar ou alugar</h2>
+            <p class="admin-head__sub">Contatos enviados pelo formulário da página inicial.</p>
+          </div>
+          <button class="pill pill--ghost" id="btnCsvInteressados" type="button">
+            <span>Baixar planilha (CSV)</span>
+          </button>
+        </div>
+
+        <div class="bezel">
+          <div class="bezel__core bezel__core--tabela">
+            <div class="tabela-scroll">
+              <table class="tabela" id="tabelaInteressados">
+                <thead>
+                  <tr>
+                    <th>Recebido</th>
+                    <th>Nome</th>
+                    <th>Contato</th>
+                    <th>Interesse</th>
+                    <th>Bairro / faixa</th>
+                    <th>Mensagem</th>
+                    <th>Situação</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================================
+           ABA 3 — LEADS PROPRIETÁRIOS (querem anunciar)
+           ============================================================ -->
+      <section class="admin-aba" id="abaProprietarios" hidden>
+        <div class="admin-head">
+          <div>
+            <span class="eyebrow">Leads</span>
+            <h2>Proprietários que querem anunciar</h2>
+            <p class="admin-head__sub">Contatos enviados pela página "Anuncie seu imóvel".</p>
+          </div>
+          <button class="pill pill--ghost" id="btnCsvProprietarios" type="button">
+            <span>Baixar planilha (CSV)</span>
+          </button>
+        </div>
+
+        <div class="bezel">
+          <div class="bezel__core bezel__core--tabela">
+            <div class="tabela-scroll">
+              <table class="tabela" id="tabelaProprietarios">
+                <thead>
+                  <tr>
+                    <th>Recebido</th>
+                    <th>Nome</th>
+                    <th>Contato</th>
+                    <th>Objetivo</th>
+                    <th>Imóvel</th>
+                    <th>Valor</th>
+                    <th>Mensagem</th>
+                    <th>Situação</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- Avisinho que aparece no canto (salvo, apagado, erro...) -->
+  <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+
+  <!-- ================================================================
+       SCRIPTS — a ordem importa
+       ================================================================ -->
+  
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.110.8"></script>
+  <script src="supabase-config.js"></script>
+  <script src="admin.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <!-- ================================================================
+       PÁGINA: ANUNCIE SEU IMÓVEL (anuncie-seu-imovel.html)
+       ----------------------------------------------------------------
+       Página pública, feita para captar PROPRIETÁRIOS — quem tem um
+       imóvel e quer vender, alugar, permutar ou só saber quanto vale.
+
+       Os contatos enviados aqui vão para a tabela
+       "leads_proprietarios" do Supabase, SEPARADA da tabela de quem
+       quer comprar/alugar ("leads_interessados").
+
+       Quem envia o formulário é um visitante sem login. Ele só tem
+       permissão de INSERIR (regra "visitante_envia_lead_proprietario"
+       no supabase-setup.sql) — não consegue ler nada da tabela.
+       ================================================================ -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <title>Anuncie seu imóvel | Monica Carvalho</title>
+  <meta name="description" content="Quer vender ou alugar seu imóvel na Barra da Tijuca? Avaliação gratuita, divulgação profissional e acompanhamento completo com Monica Carvalho, consultora imobiliária." />
+  <meta name="robots" content="index, follow" />
+  <meta name="theme-color" content="#0f3d3e" />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:locale" content="pt_BR" />
+  <meta property="og:site_name" content="Monica Carvalho" />
+  <meta property="og:title" content="Anuncie seu imóvel | Monica Carvalho" />
+  <meta property="og:description" content="Avaliação gratuita e divulgação profissional do seu imóvel na Barra da Tijuca." />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="formularios.css" />
+  <link rel="icon" href="imagens/main-site/logo.png" />
+</head>
+<!-- data-page="lead" avisa o script.js que aqui não tem lista de imóveis -->
+<body data-page="lead">
+
+  <!-- ================================================================
+       CABEÇALHO — mesmo das outras páginas
+       ================================================================ -->
+  <header class="header" id="header">
+    <div class="container header__inner">
+      <a href="index.html" class="logo" aria-label="Monica Carvalho — página inicial">
+        <span class="logo__badge">MC</span>
+        <span class="logo__text"><strong>Monica Carvalho</strong><small>Consultora Imobiliária</small></span>
+      </a>
+
+      <nav class="nav" id="nav" aria-label="Navegação principal">
+        <a href="index.html#sobre" class="nav__link">Sobre</a>
+        <a href="index.html#atendimento" class="nav__link">Atendimento</a>
+        <a href="imoveis.html" class="nav__link">Imóveis</a>
+        <a href="anuncie-seu-imovel.html" class="nav__link is-current" aria-current="page">Anuncie seu imóvel</a>
+        <a href="index.html#contato" class="nav__link">Contato</a>
+      </nav>
+
+      <a href="#" class="btn btn--primary header__cta js-whatsapp" target="_blank" rel="noopener"
+         aria-label="Falar com Monica pelo WhatsApp">WhatsApp</a>
+
+      <button class="nav-toggle" id="navToggle" aria-label="Abrir menu de navegação" aria-expanded="false" aria-controls="nav">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <main>
+    <!-- ================================================================
+         BLOCO PRINCIPAL
+         Layout dividido: o texto de venda de um lado, o formulário do
+         outro. No celular vira uma coluna só (o texto em cima).
+         ================================================================ -->
+    <section class="lead-split">
+      <div class="container lead-split__grid">
+
+        <!-- ---------- Coluna da esquerda: argumentos ---------- -->
+        <div class="lead-texto reveal">
+          <span class="eyebrow">Para proprietários</span>
+          <h1>Seu imóvel merece ser <em>bem anunciado.</em></h1>
+          <p class="lead-texto__lead">
+            Avaliação gratuita, fotos profissionais e divulgação nos principais portais,
+            no Google e nas redes. Você acompanha cada proposta e cada visita — sem
+            surpresas e sem burocracia.
+          </p>
+
+          <ol class="lead-passos">
+            <li>
+              <span class="lead-passos__num">01</span>
+              <div>
+                <h3>Você preenche o formulário</h3>
+                <p>Leva menos de dois minutos. Só o essencial para eu entender o imóvel.</p>
+              </div>
+            </li>
+            <li>
+              <span class="lead-passos__num">02</span>
+              <div>
+                <h3>Avaliação de valor gratuita</h3>
+                <p>Comparo com o que foi realmente negociado na região nos últimos meses.</p>
+              </div>
+            </li>
+            <li>
+              <span class="lead-passos__num">03</span>
+              <div>
+                <h3>Divulgação profissional</h3>
+                <p>Fotos, texto do anúncio e presença nos canais onde o comprador procura.</p>
+              </div>
+            </li>
+            <li>
+              <span class="lead-passos__num">04</span>
+              <div>
+                <h3>Visitas e negociação acompanhadas</h3>
+                <p>Você recebe o retorno de cada visita e decide com informação na mão.</p>
+              </div>
+            </li>
+          </ol>
+
+          <div class="lead-selo">
+            <strong>Prefere conversar direto?</strong>
+            <a href="#" class="btn btn--outline js-whatsapp" target="_blank" rel="noopener">Chamar no WhatsApp</a>
+          </div>
+        </div>
+
+        <!-- ---------- Coluna da direita: formulário ---------- -->
+        <div class="lead-form-area reveal delay-1">
+          <div class="bezel">
+            <div class="bezel__core">
+
+              <h2 class="form-titulo">Fale sobre o seu imóvel</h2>
+              <p class="form-sub">Os campos com <strong>*</strong> são obrigatórios.</p>
+
+              <!-- ============================================
+                   FORMULÁRIO — id="formProprietario"
+                   Quem envia os dados é o arquivo formularios.js
+                   ============================================ -->
+              <form class="form" id="formProprietario" novalidate>
+
+                <div class="campo">
+                  <label for="propNome">Seu nome *</label>
+                  <input type="text" id="propNome" name="nome" required maxlength="120" autocomplete="name" placeholder="Nome e sobrenome" />
+                </div>
+
+                <div class="grade-2">
+                  <div class="campo">
+                    <label for="propTelefone">WhatsApp *</label>
+                    <input type="tel" id="propTelefone" name="telefone" required maxlength="25" autocomplete="tel" placeholder="(21) 99999-9999" />
+                  </div>
+                  <div class="campo">
+                    <label for="propEmail">E-mail</label>
+                    <input type="email" id="propEmail" name="email" maxlength="140" autocomplete="email" placeholder="voce@email.com" />
+                  </div>
+                </div>
+
+                <!-- O que a pessoa quer fazer com o imóvel -->
+                <div class="campo">
+                  <span class="campo__rotulo">O que você quer fazer? *</span>
+                  <div class="opcoes">
+                    <label class="opcao">
+                      <input type="radio" name="objetivo" value="vender" checked />
+                      <span>Vender</span>
+                    </label>
+                    <label class="opcao">
+                      <input type="radio" name="objetivo" value="alugar" />
+                      <span>Alugar</span>
+                    </label>
+                    <label class="opcao">
+                      <input type="radio" name="objetivo" value="permuta" />
+                      <span>Permuta</span>
+                    </label>
+                    <label class="opcao">
+                      <input type="radio" name="objetivo" value="avaliar" />
+                      <span>Só avaliar</span>
+                    </label>
+                  </div>
+                </div>
+
+                <div class="grade-2">
+                  <div class="campo">
+                    <label for="propTipoImovel">Tipo do imóvel</label>
+                    <select id="propTipoImovel" name="tipo_imovel">
+                      <option value="">Selecione…</option>
+                      <option>Apartamento</option>
+                      <option>Cobertura</option>
+                      <option>Casa</option>
+                      <option>Casa em condomínio</option>
+                      <option>Flat / studio</option>
+                      <option>Sala comercial</option>
+                      <option>Loja</option>
+                      <option>Terreno</option>
+                      <option>Outro</option>
+                    </select>
+                  </div>
+                  <div class="campo">
+                    <label for="propBairro">Bairro</label>
+                    <input type="text" id="propBairro" name="bairro" maxlength="90" placeholder="Ex.: Barra da Tijuca" />
+                  </div>
+                </div>
+
+                <div class="campo">
+                  <label for="propEndereco">Endereço ou nome do condomínio</label>
+                  <input type="text" id="propEndereco" name="endereco" maxlength="180" placeholder="Ex.: Av. das Américas, 500 — Cond. Mundo Novo" />
+                  <small class="campo__dica">Não é publicado no site. Serve só para eu localizar o imóvel.</small>
+                </div>
+
+                <div class="grade-3">
+                  <div class="campo">
+                    <label for="propQuartos">Quartos</label>
+                    <input type="text" id="propQuartos" name="quartos" maxlength="20" placeholder="Ex.: 3" />
+                  </div>
+                  <div class="campo">
+                    <label for="propVagas">Vagas</label>
+                    <input type="text" id="propVagas" name="vagas" maxlength="20" placeholder="Ex.: 2" />
+                  </div>
+                  <div class="campo">
+                    <label for="propArea">Área (m²)</label>
+                    <input type="text" id="propArea" name="area" maxlength="20" placeholder="Ex.: 95" />
+                  </div>
+                </div>
+
+                <div class="grade-2">
+                  <div class="campo">
+                    <label for="propValor">Valor pretendido</label>
+                    <input type="text" id="propValor" name="valor_desejado" maxlength="60" placeholder="Ex.: R$ 1.200.000" />
+                    <small class="campo__dica">Não sabe? Deixe em branco que eu avalio.</small>
+                  </div>
+                  <div class="campo">
+                    <label for="propOcupacao">Situação hoje</label>
+                    <select id="propOcupacao" name="ocupacao">
+                      <option value="">Selecione…</option>
+                      <option value="vazio">Vazio</option>
+                      <option value="morador">Eu moro nele</option>
+                      <option value="alugado">Está alugado</option>
+                      <option value="obra">Em reforma / obra</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="campo">
+                  <label for="propExclusividade">Já está anunciado em outro lugar?</label>
+                  <select id="propExclusividade" name="exclusividade">
+                    <option value="">Selecione…</option>
+                    <option value="nao">Não, ainda não anunciei</option>
+                    <option value="sim">Sim, com outra imobiliária</option>
+                    <option value="quero_saber">Quero entender como funciona</option>
+                  </select>
+                </div>
+
+                <div class="campo">
+                  <label for="propMensagem">Quer contar mais alguma coisa?</label>
+                  <textarea id="propMensagem" name="mensagem" rows="4" maxlength="1200"
+                    placeholder="Ex.: apartamento reformado, sol da manhã, prazo para desocupar…"></textarea>
+                </div>
+
+                <!-- Consentimento (LGPD) -->
+                <label class="aceite">
+                  <input type="checkbox" id="propAceite" required />
+                  <span>Autorizo o contato da Monica Carvalho pelos dados informados. *</span>
+                </label>
+
+                <!-- Campo-armadilha contra robôs de spam: fica invisível
+                     para pessoas. Se vier preenchido, o envio é ignorado. -->
+                <div class="campo-armadilha" aria-hidden="true">
+                  <label for="propSite">Não preencha este campo</label>
+                  <input type="text" id="propSite" name="site" tabindex="-1" autocomplete="off" />
+                </div>
+
+                <!-- Aqui aparecem os erros -->
+                <p class="form__aviso" id="propAviso" role="alert" hidden></p>
+
+                <button type="submit" class="btn btn--primary btn--bloco" id="propEnviar">
+                  Quero anunciar meu imóvel
+                </button>
+              </form>
+
+              <!-- Mensagem de sucesso: aparece no lugar do formulário -->
+              <div class="form-sucesso" id="propSucesso" hidden>
+                <span class="form-sucesso__marca" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.1">
+                    <circle cx="12" cy="12" r="9.25" />
+                    <path d="M8 12.5l2.6 2.6L16 9.5" stroke-linecap="round" stroke-linejoin="round" />
+                  </svg>
+                </span>
+                <h3>Recebi o seu contato!</h3>
+                <p>Vou analisar as informações do imóvel e retorno em breve com a avaliação. Se preferir adiantar a conversa, me chame no WhatsApp.</p>
+                <a href="#" class="btn btn--gold js-whatsapp" target="_blank" rel="noopener">Falar agora no WhatsApp</a>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+  </main>
+
+  <!-- ================================================================
+       RODAPÉ — igual ao das outras páginas
+       ================================================================ -->
+  <footer class="footer">
+    <div class="container footer__inner">
+      <a href="index.html" class="logo" aria-label="Monica Carvalho — página inicial">
+        <span class="logo__badge">MC</span>
+        <span class="logo__text"><strong>Monica Carvalho</strong><small>Consultora Imobiliária</small></span>
+      </a>
+      <p class="footer__tagline">Mais do que imóveis: novos começos conduzidos com cuidado.</p>
+      <nav class="footer__links" aria-label="Contatos">
+        <a href="#" class="js-whatsapp" target="_blank" rel="noopener">WhatsApp</a>
+        <a href="#" class="js-instagram" target="_blank" rel="noopener">Instagram</a>
+      </nav>
+      <p class="footer__copy">© <span id="year">2026</span> Monica Carvalho · CRECI 55641 · Todos os direitos reservados.</p>
+
+      <div style="display: flex; justify-content: center; align-items: center; gap: 8px; margin-top: 24px;">
+        <span style="font-size: 13px; color: #555;">Landing page por</span>
+        <a href="https://vmvsaint.github.io/Meu-site/" target="_blank" style="display: flex; align-items: center; text-decoration: none;">
+          <img src="logo-escuro.png" alt="Vértice Digital" style="max-height: 28px !important; width: auto !important;">
+        </a>
+      </div>
+    </div>
+  </footer>
+
+  <a href="#" class="whatsapp-float js-whatsapp" target="_blank" rel="noopener"
+     aria-label="Conversar agora pelo WhatsApp">
+    <svg viewBox="0 0 32 32" width="30" height="30" fill="currentColor" aria-hidden="true" focusable="false">
+      <path d="M16 .8C7.6.8.8 7.6.8 16c0 2.7.7 5.3 2 7.6L.8 31.2l7.8-2c2.2 1.2 4.7 1.9 7.4 1.9 8.4 0 15.2-6.8 15.2-15.2S24.4.8 16 .8zm0 27.7c-2.4 0-4.7-.6-6.7-1.8l-.5-.3-4.6 1.2 1.2-4.5-.3-.5c-1.3-2-2-4.4-2-6.8C3.1 8.9 8.9 3.1 16 3.1S28.9 8.9 28.9 16 23.1 28.5 16 28.5zm7.1-9.5c-.4-.2-2.3-1.1-2.6-1.3-.4-.1-.6-.2-.9.2-.3.4-1 1.3-1.2 1.5-.2.3-.4.3-.8.1-.4-.2-1.6-.6-3.1-1.9-1.1-1-1.9-2.3-2.1-2.6-.2-.4 0-.6.2-.8l.6-.7c.2-.2.3-.4.4-.7.1-.3.1-.5 0-.7-.1-.2-.9-2.1-1.2-2.9-.3-.8-.6-.7-.9-.7h-.8c-.3 0-.7.1-1.1.5-.4.4-1.4 1.4-1.4 3.4s1.5 3.9 1.7 4.2c.2.3 2.9 4.5 7.1 6.3 1 .4 1.8.7 2.4.9 1 .3 1.9.3 2.6.2.8-.1 2.3-1 2.6-1.9.3-.9.3-1.7.2-1.9-.1-.2-.4-.3-.8-.5z"/>
+    </svg>
+  </a>
+
+  <!-- ================================================================
+       SCRIPTS — a ordem importa
+       ================================================================ -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.110.8" defer></script>
+  <script src="dados.js" defer></script>
+  <script src="supabase-config.js" defer></script>
+  <script src="script.js" defer></script>
+  <script src="formularios.js" defer></script>
+</body>
+</html>

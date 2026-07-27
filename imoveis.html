@@ -46,6 +46,7 @@
         <a href="index.html#sobre" class="nav__link">Sobre</a>
         <a href="index.html#atendimento" class="nav__link">Atendimento</a>
         <a href="imoveis.html" class="nav__link">Imóveis</a>
+        <a href="anuncie-seu-imovel.html" class="nav__link">Anuncie seu imóvel</a>
         <a href="index.html#depoimentos" class="nav__link">Depoimentos</a>
         <a href="index.html#contato" class="nav__link">Contato</a>
       </nav>
@@ -133,7 +134,10 @@
   </a>
 
   <!-- dados.js (contatos + imóveis) precisa vir ANTES do script.js -->
-  <script src="dados.js"></script>
+  <!-- A ordem importa: biblioteca → dados → config → motor do site -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.110.8" defer></script>
+  <script src="dados.js" defer></script>
+  <script src="supabase-config.js" defer></script>
   <script src="script.js" defer></script>
 </body>
 </html>
