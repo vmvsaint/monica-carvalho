@@ -765,3 +765,60 @@
 [hidden] {
   display: none !important;
 }
+/* ================================================================
+   CORREÇÕES DE LAYOUT DO FORMULÁRIO DE IMÓVEL
+   ================================================================ */
+
+/* ---------- 1. Devolve o respiro interno dos blocos ----------
+   Os blocos são <fieldset class="bezel__core">: o mesmo elemento
+   recebe as duas regras. Como ".form--imovel fieldset" tem
+   especificidade maior que ".bezel__core", o padding: 0 vencia e o
+   conteúdo encostava na borda.
+   min-width: 0 é obrigatório aqui: fieldset tem largura mínima
+   automática que estoura as grades de 2 e 3 colunas. */
+.form--imovel fieldset.bezel__core {
+  padding: 2rem 1.75rem;
+  min-width: 0;
+}
+
+/* ---------- 2. Normaliza o <legend> ----------
+   O navegador desenha o legend sobre a BORDA do fieldset, fora da
+   área de padding — por isso o título ficava colado na esquerda.
+   Com float, ele deixa de ser o "legend renderizado" e volta ao
+   fluxo normal, respeitando o padding. O clear no elemento seguinte
+   impede que ele suba ao lado do título. */
+.form--imovel legend {
+  float: left;
+  width: 100%;
+  padding: 0;
+}
+.form--imovel legend + * {
+  clear: both;
+}
+
+/* ---------- 3. Conserta a chave "Publicado no site" ----------
+   ".campo > label" vencia ".switch" e trocava inline-flex por block.
+   Sem o flex os <span> viravam inline, a bolinha perdia a referência
+   de posicionamento e caía por cima do texto. */
+.campo > label.switch {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0;
+  font-size: 0.9rem;
+  text-transform: none;    /* estava saindo em CAIXA ALTA */
+  letter-spacing: normal;
+}
+
+/* ---------- 4. Rede de segurança contra vazamentos ---------- */
+.bezel__core > *,
+.form--imovel .campo { min-width: 0; }
+
+.bloco__titulo,
+.bloco__ajuda,
+.campo__dica { overflow-wrap: break-word; }
+
+/* ---------- 5. Mesmo respiro no celular ---------- */
+@media (max-width: 768px) {
+  .form--imovel fieldset.bezel__core { padding: 1.5rem 1.15rem; }
+}
