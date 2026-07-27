@@ -762,3 +762,6 @@
   .admin *::after { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; }
   .admin-card { opacity: 1; transform: none; filter: none; }
 }
+[hidden] {
+  display: none !important;
+}
