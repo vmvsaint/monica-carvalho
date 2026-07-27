@@ -691,6 +691,71 @@
     });
   }
 
+/* ==============================================================
+     PARTE 5.D — UNIDADE AUTOMÁTICA (m² e vaga/vagas)
+     --------------------------------------------------------------
+     A Monica digita só o número e o campo completa sozinho:
+        92  →  92 m²
+         1  →  1 vaga
+         3  →  3 vagas
+
+     A formatação acontece quando ela SAI do campo (evento "blur"),
+     e não a cada tecla. Se fosse a cada tecla, digitar "9" viraria
+     "9 m²" e o "2" seguinte cairia no lugar errado.
+
+     REGRA DE SEGURANÇA: se ela já escreveu alguma letra no campo,
+     o texto é respeitado como está. É isso que protege os imóveis
+     já cadastrados ("92 m²", "3 vagas") de virarem "92 m² m²", e
+     permite escrever coisas como "Sob consulta".
+     ============================================================== */
+
+  /* Para incluir outro campo, acrescente uma linha nesta lista.
+     • unidade           → sempre acrescenta o mesmo texto
+     • singular/plural   → escolhe conforme o número (1 = singular) */
+  const CAMPOS_COM_UNIDADE = [
+    { id: "area",  unidade: "m²" },
+    { id: "vagas", singular: "vaga", plural: "vagas" },
+
+    /* Descomente a linha abaixo se quiser o mesmo nos quartos */
+    { id: "quartos", singular: "quarto", plural: "quartos" },
+  ];
+
+  function formatarComUnidade(bruto, regra) {
+    const texto = String(bruto == null ? "" : bruto).trim();
+    if (!texto) return "";
+
+    /* Procura o primeiro número (aceita vírgula: 92,5) */
+    const achado = texto.match(/\d+(?:[.,]\d+)?/);
+    if (!achado) return texto;   // não tem número: deixa como está
+
+    /* Já tem letra? Então ela mesma escreveu a unidade — não mexe */
+    if (/[a-zA-ZçÇáàâãéêíóôõúÁÀÂÃÉÊÍÓÔÕÚ²³]/.test(texto)) return texto;
+
+    const numeroTexto = achado[0];
+
+    /* Caso 1: unidade fixa, como m² */
+    if (regra.unidade) return numeroTexto + " " + regra.unidade;
+
+    /* Caso 2: singular ou plural conforme o número */
+    const valor = parseFloat(numeroTexto.replace(",", "."));
+    return numeroTexto + " " + (valor === 1 ? regra.singular : regra.plural);
+  }
+
+  function ligarCamposComUnidade() {
+    CAMPOS_COM_UNIDADE.forEach(function (regra) {
+      const campo = $(regra.id);
+      if (!campo) return;
+
+      /* Abre o teclado numérico no celular */
+      campo.setAttribute("inputmode", "numeric");
+
+      /* "blur" = a pessoa saiu do campo (clicou fora ou deu Tab) */
+      campo.addEventListener("blur", function () {
+        campo.value = formatarComUnidade(campo.value, regra);
+      });
+    });
+  }
+
   /* ==============================================================
      PARTE 6 — FORMULÁRIO: PREENCHER, LER E SALVAR
      ============================================================== */
@@ -784,8 +849,9 @@
       preco: $("preco").value.trim(),
       quartos: $("quartos").value.trim(),
       banheiros: $("banheiros").value.trim(),
-      area: $("area").value.trim(),
-      vagas: $("vagas").value.trim(),
+      /* Passam pela unidade automática também aqui, por garantia */
+      area: formatarComUnidade($("area").value, { unidade: "m²" }),
+      vagas: formatarComUnidade($("vagas").value, { singular: "vaga", plural: "vagas" }),
       descricao: $("descricao").value.trim(),
       descricao_completa: $("descricaoCompleta").value.trim(),
 
@@ -1067,6 +1133,9 @@
     /* Máscara dos campos de valor (R$) */
     ligarMascaraDinheiro();
     
+    /* Unidade automática nos campos de área e vagas */
+    ligarCamposComUnidade();
+
     /* Formulário */
     $("btnNovoImovel").addEventListener("click", () => abrirFormulario(null));
     $("btnVoltarLista").addEventListener("click", fecharFormulario);
