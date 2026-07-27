@@ -586,7 +586,110 @@
     desenharFotos();
     aviso("Foto removida.");
   }
+  /* ==============================================================
+     PARTE 5.C — MÁSCARA DE DINHEIRO
+     --------------------------------------------------------------
+     Formata os campos de valor enquanto a Monica digita:
+       560000    →  R$ 560.000
+       5163,63   →  R$ 5.163,63
+       13000/mês →  R$ 13.000/mês
 
+     REGRA DE LEITURA (importante entender):
+       • Se tiver VÍRGULA, ela é o separador de centavos e os pontos
+         são separadores de milhar.  "5.163,63" = cinco mil e cento
+         e sessenta e três reais e sessenta e três centavos.
+       • Se NÃO tiver vírgula, os pontos também são de milhar.
+         "1.490.000" = um milhão, quatrocentos e noventa mil.
+       Ou seja: para colocar centavos, use vírgula. Sem vírgula, o
+       valor é lido como reais inteiros.
+
+     O que vier DEPOIS do número é preservado como está — é assim
+     que o "/mês" da locação continua funcionando.
+     ============================================================== */
+
+  /* Quais campos recebem a máscara. Para incluir outro, basta
+     acrescentar o id dele nesta lista. */
+  const CAMPOS_DE_DINHEIRO = ["preco", "condominio", "iptu"];
+
+  function formatarMoeda(bruto) {
+    let texto = String(bruto == null ? "" : bruto);
+
+    /* Tira o "R$" que já estava lá — ele é recolocado no final */
+    texto = texto.replace(/R\$/gi, "").replace(/^\s+/, "");
+
+    /* Separa a parte numérica do resto.
+       "13.000/mês"  →  numero: "13.000"   sufixo: "/mês" */
+    const casamento = texto.match(/^([\d.,]*)([\s\S]*)$/);
+    const numero = casamento[1];
+    const sufixo = casamento[2];
+
+    /* Ainda não digitou nenhum número: devolve como está */
+    if (!/\d/.test(numero)) return texto.trim() ? texto.trim() : "";
+
+    let inteiros;
+    let centavos = "";
+    const temVirgula = numero.indexOf(",") !== -1;
+
+    if (temVirgula) {
+      const partes = numero.split(",");
+      inteiros = partes[0].replace(/\D/g, "");
+      centavos = (partes[1] || "").replace(/\D/g, "").slice(0, 2);
+    } else {
+      inteiros = numero.replace(/\D/g, "");
+    }
+
+    /* Tira zeros à esquerda: "000560000" vira "560000" */
+    inteiros = inteiros.replace(/^0+(?=\d)/, "");
+    if (!inteiros) inteiros = "0";
+
+    /* Coloca um ponto a cada 3 dígitos, da direita para a esquerda */
+    const comPontos = inteiros.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+
+    let saida = "R$ " + comPontos;
+    if (temVirgula) saida += "," + centavos;
+    return saida + sufixo;
+  }
+
+  /* Conta dígitos e vírgulas de um trecho — serve para saber onde
+     recolocar o cursor depois de reformatar o campo */
+  function contarDigitos(texto) {
+    const achados = String(texto).match(/[\d,]/g);
+    return achados ? achados.length : 0;
+  }
+
+  function ligarMascaraDinheiro() {
+    CAMPOS_DE_DINHEIRO.forEach(function (id) {
+      const campo = $(id);
+      if (!campo) return;
+
+      /* Abre o teclado numérico no celular */
+      campo.setAttribute("inputmode", "decimal");
+
+      campo.addEventListener("input", function () {
+        const antes = campo.value;
+        const posicao = campo.selectionStart;
+
+        /* Quantos dígitos existiam ANTES do cursor */
+        const digitosAntes = contarDigitos(antes.slice(0, posicao));
+
+        const depois = formatarMoeda(antes);
+        if (depois === antes) return;   // nada mudou, não mexe no cursor
+
+        campo.value = depois;
+
+        /* Recoloca o cursor depois da mesma quantidade de dígitos.
+           Sem isso o cursor pularia para o fim a cada tecla, e não
+           daria para corrigir um número no meio. */
+        let i = 0;
+        let contados = 0;
+        while (i < depois.length && contados < digitosAntes) {
+          if (/[\d,]/.test(depois[i])) contados++;
+          i++;
+        }
+        campo.setSelectionRange(i, i);
+      });
+    });
+  }
 
   /* ==============================================================
      PARTE 6 — FORMULÁRIO: PREENCHER, LER E SALVAR
@@ -626,13 +729,13 @@
 
     $("titulo").value = imovel.titulo || "";
     $("bairro").value = imovel.bairro || "";
-    $("preco").value = imovel.preco || "";
+    $("preco").value = formatarMoeda(imovel.preco || "");
     $("quartos").value = imovel.quartos || "";
     $("banheiros").value = imovel.banheiros || "";
     $("area").value = imovel.area || "";
     $("vagas").value = imovel.vagas || "";
-    $("condominio").value = imovel.condominio || "";
-    $("iptu").value = imovel.iptu || "";
+    $("condominio").value = formatarMoeda(imovel.condominio || "");
+    $("iptu").value = formatarMoeda(imovel.iptu || "");
     $("descricao").value = imovel.descricao || "";
     $("descricaoCompleta").value = imovel.descricao_completa || "";
     $("caracteristicas").value = (imovel.caracteristicas || []).join("\n");
@@ -961,6 +1064,9 @@
         desenharListaImoveis();
       }));
 
+    /* Máscara dos campos de valor (R$) */
+    ligarMascaraDinheiro();
+    
     /* Formulário */
     $("btnNovoImovel").addEventListener("click", () => abrirFormulario(null));
     $("btnVoltarLista").addEventListener("click", fecharFormulario);
