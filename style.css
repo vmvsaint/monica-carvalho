@@ -722,6 +722,49 @@ h1 em {
 }
 
 /* ================================================================
+   BLOCO DO SIMULADOR DE FINANCIAMENTO (na página principal)
+   ================================================================ */
+.simulador-cta {
+  display: grid;
+  gap: 1.8rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 2.2rem 1.8rem;
+  box-shadow: var(--shadow-card);
+  transition: box-shadow var(--transition), border-color var(--transition);
+}
+.simulador-cta:hover {
+  box-shadow: var(--shadow-hover);
+  border-color: rgba(185, 138, 68, 0.45);
+}
+.simulador-cta__texto p { color: var(--muted); margin-block: 0.9rem 1.5rem; }
+
+.simulador-cta__lista { display: grid; gap: 0.6rem; align-content: center; }
+.simulador-cta__lista li {
+  position: relative;
+  padding-left: 1.7rem;
+  font-size: 0.94rem;
+  color: var(--text);
+}
+.simulador-cta__lista li::before {
+  content: "✓";
+  position: absolute;
+  left: 0;
+  color: var(--gold);
+  font-weight: 700;
+}
+
+@media (min-width: 56.25em) {
+  .simulador-cta {
+    grid-template-columns: 1.25fr 0.75fr;
+    gap: 3rem;
+    padding: 3rem 3.2rem;
+    align-items: center;
+  }
+}
+
+/* ================================================================
    PÁGINAS INTERNAS (imoveis.html e imovel.html)
    Estilos usados pelo catálogo e pela página de detalhes.
    ================================================================ */

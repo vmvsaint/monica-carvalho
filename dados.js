@@ -62,7 +62,7 @@ const CONFIG = {
    FOTOS: crie uma pasta chamada "imagens" ao lado do index.html e
    use "imagens/nome-da-foto.jpg", ou cole um link https://...
    ================================================================ */
-let IMOVEIS = [
+const IMOVEIS = [
 
   /* ==============================================================
      ▼▼▼ IMÓVEIS À VENDA ▼▼▼
@@ -86,7 +86,6 @@ let IMOVEIS = [
     caracteristicas: [
       "Frontal mar",
       "Sol da manhã",
-      "Andar alto",
       "Balsa para praia",
       "Vista mar",
       "Clube",
@@ -110,87 +109,6 @@ let IMOVEIS = [
       "imagens/id1/vista.webp",
     ],
   },
-
-   {
-    id: 4,
-    tipo: "venda",
-    titulo: "Santa Monica Jardins",
-    bairro: "Barra da Tijuca · Santa Monica Jardins",
-    preco: "R$ 4.550.000",
-    quartos: "3 quartos",
-    banheiros: "3 suítes",
-    area: "260 m²",
-    vagas: "3 vagas",
-    descricao: "Cond. R$5.163,63 · IPTU R$1.054,80",
-    descricaoCompleta:
-      "Santa Monica Jardins.\n\n" +
-      "Apartamento espetacular, para comprar no Santa Monica Jardins. \n\n" +
-      "Magnífico Apartamento para venda no Santa Mônica Jardins. Decorado por Arquiteto, armários planejado. Composto por uma sala confortável em três ambientes. Varanda com linda vista para a piscina, e toda área arborizada do condomínio. Possui um ótimo lavabo, transformado em 3 suítes. Sendo a suíte master com closet e banheira de hidromassagem. Copa cozinha super planejada. Dependência completa de empregada. Área de serviço separada. Condomínio clube, oferece segurança armada, e total infraestrutura, inclusive com academia da Companhia Atlética. Excelente localização, fica ao lado do supermercado Zona sul, podendo ir a pé, e em frente ao Shopping vogue Square. Bem pertinho do Shopping Rio Design, Novo Leblon. Fica próximo ás escolas Americana, britânica, Santo Agostinho, Carolina Patrício. Agende a sua visita, conheça seu novo imóvel, e venha morar com conforto, segurança e qualidade de vida!!! Não perca tempo!",
-    caracteristicas: [
-      "Maior planta do condomínio",
-      "Vista interna piscina",
-      "Planta circular",
-      "Splits instalados",
-      "Todo planejado",
-      "Dependência completa de empregada"
-    ],
-    condominio: "R$ 5.163,63/mês",
-    iptu: "R$ 1.054,80/mês",
-    imagem: "imagens/id4/principal.webp",
-    fotos: [
-      "imagens/id4/varanda.webp",
-      "imagens/id4/varanda2.webp",
-      "imagens/id4/sala.webp",
-      "imagens/id4/banheiro.webp",
-      "imagens/id4/banheiro2.webp",
-      "imagens/id4/lavabo.webp",
-      "imagens/id4/quarto.webp",
-      "imagens/id4/escritorio.webp",
-      "imagens/id4/cozinha.webp",
-      "imagens/id4/cozinha2.webp",
-      "imagens/id4/vista.webp"
-    ],
-  },
-
-    {
-    id: 5,
-      tipo: "venda",
-      titulo: "Jardim Europa",
-      bairro: "Barra da Tijuca · Jardim Europa",
-      preco: "R$ 1.570.000",
-      quartos: "3 quartos",
-      banheiros: "3 suítes",
-      area: "95 m²",
-      vagas: "2 vagas",
-      descricao: "Cond. R$2.200,99 · IPTU R$390,00",
-      descricaoCompleta:
-        "Jardim Europa.\n\n" +
-        "Apartamento espetacular à venda no Jardim Europa. \n\n" +
-        "Magnífico Apartamento Completamente reformado, inclusive hidráulica e elétrica. Splits novos instalados. Todo em porcelanato. Armários planejados serão colocados, todos novos. Voltado para o sol da manhã. Sendo a suíte master com closet e banheira de hidromassagem. Copa cozinha super planejada. Composto por uma bela sala integrada a varanda, com linda vista arborizada. Possui 3 quartos, 3 suítes. Copa cozinha e área de serviço, com entrada separada. Condomínio com segurança total, super silencioso e harmônico, balsa para a praia, churrasqueira, parquinho infantil. Box pra cada unidade, vaga dupla coberta. Localização mais que perfeita, fica em frente ao Barra shopping, podendo ir a pé tranquilamente. Agende a sua visita, conheça seu novo imóvel, e venha morar com conforto, segurança e qualidade de vida!!! PRONTO PARA ENTRAR E MORAR! Não perca tempo!",
-      caracteristicas: [
-        "Vaga dupla coberta",
-        "Box Individual",
-        "Balsa para Praia",
-        "Sol da manhã"
-        
-      ],
-      condominio: "R$ 2.200,99/mês",
-      iptu: "R$ 390,00/mês",
-      imagem: "imagens/id5/principal.webp",
-      fotos: [
-        "imagens/id5/varanda.webp",
-        "imagens/id5/sala.webp",
-        "imagens/id5/sala2.webp",
-        "imagens/id5/banheiro.webp",
-        "imagens/id5/banheiro2.webp",
-        "imagens/id5/banheiro3.webp",
-        "imagens/id5/quarto.webp",
-        "imagens/id5/quarto2.webp",
-        "imagens/id5/cozinha.webp",
-        "imagens/id5/vista.webp",
-        "imagens/id5/vista2.webp"
-      ],
-    },
   // ▼ Cole novos imóveis DE VENDA aqui embaixo
 
   /* ==============================================================
