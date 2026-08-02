@@ -28,6 +28,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
 
   <link rel="stylesheet" href="style.css" />
+  <link rel="icon" href="imagens/main-site/logo.ico">
 </head>
 <!-- data-page="lista" avisa o script.js que esta é a página de catálogo -->
 <body data-page="lista">
@@ -45,7 +46,7 @@
         <a href="index.html#sobre" class="nav__link">Sobre</a>
         <a href="index.html#atendimento" class="nav__link">Atendimento</a>
         <a href="imoveis.html" class="nav__link">Imóveis</a>
-        <a href="simulador/index.html" class="nav__link">Simulador</a>
+        <a href="anuncie-seu-imovel.html" class="nav__link">Anuncie seu imóvel</a>
         <a href="index.html#depoimentos" class="nav__link">Depoimentos</a>
         <a href="index.html#contato" class="nav__link">Contato</a>
       </nav>
@@ -64,7 +65,7 @@
          conforme o filtro escolhido (script.js). -->
     <section class="page-hero" aria-labelledby="listaTitulo">
       <div class="container">
-        <span class="eyebrow eyebrow--light">Barra da Tijuca · Rio de Janeiro</span>
+        <span class="eyebrow eyebrow--light">Rio de Janeiro</span>
         <h1 id="listaTitulo">Todos os imóveis</h1>
         <p>Clique em um imóvel para ver fotos, descrição completa e valores.</p>
       </div>
@@ -91,8 +92,8 @@
     <section class="section cta" aria-labelledby="cta-title">
       <div class="container cta__inner">
         <span class="eyebrow eyebrow--light">Não encontrou o que procura?</span>
-        <h2 id="cta-title">Monica encontra o imóvel certo para você.</h2>
-        <p>Conte o que você procura e receba uma curadoria personalizada de imóveis na Barra da Tijuca.</p>
+        <h2 id="cta-title">Eu encontro o imóvel certo para você!</h2>
+        <p>Me conte o que você procura e receba uma curadoria personalizada de imóveis na Barra da Tijuca.</p>
         <div class="cta__actions">
           <a href="#" class="btn btn--gold js-whatsapp" target="_blank" rel="noopener"
              aria-label="Pedir curadoria pelo WhatsApp">Pedir curadoria no WhatsApp</a>
@@ -103,15 +104,16 @@
 
   <footer class="footer">
     <div class="container footer__inner">
-      <a href="index.html" class="logo" aria-label="Monica Carvalho — página inicial">
+      <a href="#topo" class="logo" aria-label="Monica Carvalho — voltar ao início">
         <span class="logo__badge">MC</span>
-        <span class="logo__text"><strong>Monica Carvalho</strong><small>Consultora Imobiliária · Barra da Tijuca</small></span>
+        <span class="logo__text"><strong>Monica Carvalho</strong><small>Consultora Imobiliária</small></span>
       </a>
       <p class="footer__tagline">Mais do que imóveis: novos começos conduzidos com cuidado.</p>
       <nav class="footer__links" aria-label="Contatos">
         <a href="#" class="js-whatsapp" target="_blank" rel="noopener">WhatsApp</a>
         <a href="#" class="js-instagram" target="_blank" rel="noopener">Instagram</a>
       </nav>
+      <!-- EDITE: coloque o CRECI real da Monica abaixo -->
       <p class="footer__copy">© <span id="year">2026</span> Monica Carvalho · CRECI 55641 · Todos os direitos reservados.</p>
       
       <!-- Assinatura da Vértice Digital -->
@@ -122,8 +124,7 @@
         </a>
       </div>
     </div>
-  </footer>
-
+</footer>
   <!-- Botão flutuante do WhatsApp -->
   <a href="#" class="whatsapp-float js-whatsapp" target="_blank" rel="noopener"
      aria-label="Conversar agora pelo WhatsApp">
