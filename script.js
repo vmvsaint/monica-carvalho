@@ -14,7 +14,7 @@
    Normalmente você NÃO precisa editar nada aqui.
    ================================================================ */
 
-(function () {
+async function iniciarSite() {
   "use strict";
 
   const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -398,4 +398,21 @@
     );
     counters.forEach((el) => counterObserver.observe(el));
   }
+};
+
+(async function iniciar() {
+  const paginasComImoveis = ["home", "lista", "detalhe"];
+  const paginaAtual = document.body.dataset.page || "home";
+
+  if (paginasComImoveis.indexOf(paginaAtual) !== -1 &&
+      typeof carregarImoveisDoSupabase === "function") {
+    try {
+      const doBanco = await carregarImoveisDoSupabase();
+      if (doBanco && doBanco.length) IMOVEIS = doBanco;
+    } catch (erro) {
+      console.warn("[site] Supabase indisponivel. Usando a lista do dados.js.", erro);
+    }
+  }
+
+  iniciarSite();
 })();
