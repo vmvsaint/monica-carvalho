@@ -340,8 +340,19 @@ mostrar todos os detalhes do imóvel, é muito competente e verdadeira em dar su
     </svg>
   </a>
 
-  <!-- dados.js (contatos + imóveis) precisa vir ANTES do script.js -->
-  <script src="dados.js"></script>
+  <!-- ================================================================
+       SCRIPTS — A ORDEM IMPORTA, não troque a sequência:
+         1. biblioteca do Supabase (vem da internet)
+         2. dados.js          → contatos + lista de reserva dos imóveis
+         3. supabase-config.js → chaves e conexão
+         4. script.js         → motor do site
+         5. formularios.js    → envio do formulário de contato
+       O "defer" faz cada arquivo esperar o anterior terminar.
+       ================================================================ -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.110.8" defer></script>
+  <script src="dados.js" defer></script>
+  <script src="supabase-config.js" defer></script>
   <script src="script.js" defer></script>
+  <script src="formularios.js" defer></script>
 </body>
 </html>
