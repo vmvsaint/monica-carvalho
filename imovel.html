@@ -89,7 +89,14 @@
         <a href="#" class="js-whatsapp" target="_blank" rel="noopener">WhatsApp</a>
         <a href="#" class="js-instagram" target="_blank" rel="noopener">Instagram</a>
       </nav>
-      <p class="footer__copy">© <span id="year">2026</span> Monica Carvalho · CRECI 00000 · Todos os direitos reservados.</p>
+      <p class="footer__copy">© <span id="year">2026</span> Monica Carvalho · CRECI 55641 · Todos os direitos reservados.</p>
+      <!-- Assinatura da Vértice Digital -->
+      <div style="display: flex; justify-content: center; align-items: center; gap: 8px; margin-top: 24px;">
+        <span style="font-size: 13px; color: #555;">Site desenvolvido por</span>
+        <a href="https://vmvsaint.github.io/Meu-site/" target="_blank" style="display: flex; align-items: center; text-decoration: none;">
+          <img src="logo-escuro.png" alt="Vértice Digital" style="max-height: 28px !important; width: auto !important;">
+        </a>
+      </div>
     </div>
   </footer>
 
@@ -102,7 +109,10 @@
   </a>
 
   <!-- dados.js (contatos + imóveis) precisa vir ANTES do script.js -->
-  <script src="dados.js"></script>
+  <!-- A ordem importa: biblioteca → dados → config → motor do site -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.110.8" defer></script>
+  <script src="dados.js" defer></script>
+  <script src="supabase-config.js" defer></script>
   <script src="script.js" defer></script>
 </body>
 </html>
