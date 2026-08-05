@@ -93,7 +93,7 @@ const CONFIG = {
 
     // Faixa de valores aceita pelo simulador
     valorMinimoImovel: 100000,
-    valorMaximoImovel: 3000000,
+    valorMaximoImovel: 20000000,
     valorPadraoImovel: 450000,
 
     // Quanto da renda o banco aceita comprometer (regra usual: 30%)
