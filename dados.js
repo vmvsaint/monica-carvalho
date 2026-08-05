@@ -23,6 +23,11 @@ const CONFIG = {
   whatsappNumero: "5521982580223",
   whatsappMensagem: "Olá, Monica! Vi seu site e quero saber mais sobre os imóveis anunciados.",
   instagramUrl: "https://instagram.com/gestora.monica",
+
+  /* Endereço do simulador de financiamento.
+     O botão "Simular financiamento" da página de cada imóvel
+     aponta para cá, já levando o valor do imóvel. */
+  simuladorUrl: "simulador/index.html",
 };
 
 /* ================================================================

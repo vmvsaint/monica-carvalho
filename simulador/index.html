@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Simulador de Financiamento Imobiliário</title>
+<meta name="description" content="Simule a parcela do seu financiamento imobiliário com seguros e taxas incluídos. Compare SAC e Price e descubra a renda necessária.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="css/estilo.css">
+<link rel="icon" href="../imagens/main-site/logo.ico">
+</head>
+<body>
+
+<!-- ═══════════════ TOPO FIXO ═══════════════ -->
+<header class="topo" id="topo">
+  <div class="env topo-conteudo">
+    <!-- logo ou badge com iniciais — montado por app.js -->
+    <div id="profBloco"></div>
+
+    <a class="btn btn--zap topo-zap" id="topoZap" href="#" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+        <path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 0 0 4.79 1.22h.01c5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0 0 12.04 2Zm5.8 14.1c-.25.69-1.43 1.32-1.97 1.37-.5.05-1.15.07-1.85-.12a16.9 16.9 0 0 1-1.68-.62c-2.95-1.28-4.88-4.25-5.03-4.45-.15-.2-1.2-1.6-1.2-3.05s.76-2.16 1.03-2.46c.27-.3.59-.37.79-.37h.57c.18 0 .43-.07.67.51.25.6.85 2.07.92 2.22.07.15.12.32.02.52-.1.2-.15.32-.3.5-.15.17-.31.39-.44.52-.15.15-.3.31-.13.61.17.3.77 1.27 1.65 2.06 1.14 1.01 2.09 1.33 2.39 1.48.3.15.47.12.65-.07.17-.2.75-.87.95-1.17.2-.3.4-.25.67-.15.27.1 1.72.81 2.02.96.3.15.5.22.57.35.07.12.07.72-.18 1.41Z"/>
+      </svg>
+      <span>Falar agora</span>
+    </a>
+  </div>
+</header>
+
+<main>
+
+  <!-- ═══════════════ ABERTURA ═══════════════ -->
+  <section class="abertura" aria-labelledby="tituloPagina">
+    <div class="env">
+      <div class="abertura-conteudo reveal">
+        <span class="eyebrow eyebrow--claro" id="etiquetaPagina"></span>
+        <h1 id="tituloPagina"></h1>
+        <p class="lead" id="subtituloPagina"></p>
+      </div>
+    </div>
+  </section>
+
+  <div class="env">
+
+    <!-- ═══════════════ PAINEL PRINCIPAL ═══════════════ -->
+    <div class="painel">
+
+      <!-- ─── COLUNA ESQUERDA: os controles ─── -->
+      <section class="controles reveal" aria-label="Dados da simulação">
+
+        <div class="campo">
+          <div class="campo-topo">
+            <label for="valorImovel">Valor do imóvel</label>
+            <output class="valor-atual" id="saidaValor"></output>
+          </div>
+          <input type="range" id="valorImovel" step="5000">
+          <div class="faixa"><span id="faixaValorMin"></span><span id="faixaValorMax"></span></div>
+        </div>
+
+        <div class="campo">
+          <div class="campo-topo">
+            <label for="entrada">Entrada</label>
+            <output class="valor-atual" id="saidaEntrada"></output>
+          </div>
+          <input type="range" id="entrada" step="1000">
+          <div class="faixa">
+            <span id="entradaPercent">—</span>
+            <span id="avisoEntrada" class="aviso-min"></span>
+          </div>
+        </div>
+
+        <div class="campo">
+          <div class="campo-topo">
+            <label for="prazo">Prazo</label>
+            <output class="valor-atual" id="saidaPrazo"></output>
+          </div>
+          <input type="range" id="prazo" min="5" step="1">
+          <div class="faixa"><span>5 anos</span><span id="faixaPrazoMax"></span></div>
+        </div>
+
+        <div class="campo">
+          <div class="campo-topo">
+            <label for="taxa">Taxa de juros ao ano</label>
+          </div>
+          <div class="entrada-taxa">
+            <input type="number" id="taxa" step="0.01" min="0" max="30" inputmode="decimal">
+            <span class="sufixo">% a.a.</span>
+          </div>
+          <p class="nota">Taxa efetiva. Consulte a tabela vigente do seu banco.</p>
+        </div>
+
+      </section>
+
+      <!-- ─── COLUNA DIREITA: os resultados ─── -->
+      <section class="resultados" aria-live="polite">
+
+        <div class="comparativo">
+
+          <article class="sistema destaque reveal atraso-1">
+            <div class="sistema-tag">SAC · o mais usado</div>
+            <div class="sistema-rotulo">1ª parcela</div>
+            <div class="sistema-valor" id="sacInicial">—</div>
+            <div class="sistema-nota">
+              cai até <strong id="sacFinal">—</strong> na última
+            </div>
+            <dl class="mini">
+              <div><dt>Total de juros</dt><dd id="sacJuros">—</dd></div>
+              <div><dt>Total pago</dt><dd id="sacTotal">—</dd></div>
+            </dl>
+          </article>
+
+          <article class="sistema reveal atraso-2">
+            <div class="sistema-tag">PRICE · parcela fixa</div>
+            <div class="sistema-rotulo">parcela</div>
+            <div class="sistema-valor" id="priceInicial">—</div>
+            <div class="sistema-nota">fixa do início ao fim</div>
+            <dl class="mini">
+              <div><dt>Total de juros</dt><dd id="priceJuros">—</dd></div>
+              <div><dt>Total pago</dt><dd id="priceTotal">—</dd></div>
+            </dl>
+          </article>
+
+        </div>
+
+        <div class="economia reveal" id="blocoEconomia">
+          <span>Escolhendo o SAC você paga</span>
+          <strong id="valorEconomia">—</strong>
+          <span>a menos de juros</span>
+        </div>
+
+        <figure class="grafico reveal">
+          <figcaption>Como a parcela evolui ao longo do contrato</figcaption>
+          <div id="areaGrafico"></div>
+          <div class="legenda">
+            <span class="chave chave-sac">SAC</span>
+            <span class="chave chave-price">Price</span>
+          </div>
+        </figure>
+
+        <div class="renda reveal">
+          <div class="renda-rotulo">Renda familiar necessária</div>
+          <div class="renda-valor" id="rendaMinima">—</div>
+          <p class="renda-nota">
+            O banco costuma aceitar comprometer até
+            <strong id="percComprometimento">30%</strong> da renda bruta.
+            Valor calculado sobre a 1ª parcela do SAC.
+          </p>
+        </div>
+
+        <div class="custos reveal">
+          <h2>O que você paga à vista</h2>
+          <dl class="lista-custos">
+            <div><dt>Entrada</dt><dd id="custoEntrada">—</dd></div>
+            <div><dt>ITBI <small id="rotuloItbi"></small></dt><dd id="custoItbi">—</dd></div>
+            <div><dt>Escritura e registro</dt><dd id="custoCartorio">—</dd></div>
+            <div class="total"><dt>Total na assinatura</dt><dd id="custoTotal">—</dd></div>
+          </dl>
+          <p class="nota">
+            Além da entrada existem os custos de transferência. É a conta que
+            mais surpreende quem está comprando o primeiro imóvel.
+          </p>
+        </div>
+
+      </section>
+    </div>
+
+    <!-- ═══════════════ CHAMADA PARA O WHATSAPP ═══════════════ -->
+    <section class="cta reveal">
+      <div class="cta-texto">
+        <h2>Quer conversar sobre essa simulação?</h2>
+        <p id="ctaSub">Mando as opções de banco e as condições reais para o seu caso.</p>
+      </div>
+      <div class="cta-form">
+        <input type="text" id="nomeCliente" placeholder="Seu nome" autocomplete="name"
+               aria-label="Seu nome">
+        <a class="btn btn--zap" id="botaoZap" href="#" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 0 0 4.79 1.22h.01c5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0 0 12.04 2Zm5.8 14.1c-.25.69-1.43 1.32-1.97 1.37-.5.05-1.15.07-1.85-.12a16.9 16.9 0 0 1-1.68-.62c-2.95-1.28-4.88-4.25-5.03-4.45-.15-.2-1.2-1.6-1.2-3.05s.76-2.16 1.03-2.46c.27-.3.59-.37.79-.37h.57c.18 0 .43-.07.67.51.25.6.85 2.07.92 2.22.07.15.12.32.02.52-.1.2-.15.32-.3.5-.15.17-.31.39-.44.52-.15.15-.3.31-.13.61.17.3.77 1.27 1.65 2.06 1.14 1.01 2.09 1.33 2.39 1.48.3.15.47.12.65-.07.17-.2.75-.87.95-1.17.2-.3.4-.25.67-.15.27.1 1.72.81 2.02.96.3.15.5.22.57.35.07.12.07.72-.18 1.41Z"/>
+          </svg>
+          Enviar simulação no WhatsApp
+        </a>
+      </div>
+    </section>
+
+    <!-- ═══════════════ AVISO LEGAL ═══════════════ -->
+    <p class="disclaimer">
+      Esta é uma <strong>simulação estimada</strong>, calculada com os parâmetros
+      informados nesta página. Não constitui proposta, oferta de crédito ou garantia
+      de aprovação. Os valores finais dependem da tabela vigente do banco, da análise
+      de crédito, da avaliação do imóvel e das alíquotas do seu município.
+    </p>
+
+  </div>
+</main>
+
+<!-- ═══════════════ RODAPÉ ═══════════════ -->
+<footer class="rodape">
+  <div class="env rodape-conteudo">
+    <div class="rodape-prof" id="rodapeProf"></div>
+    <div class="rodape-credito" id="rodapeCredito"></div>
+  </div>
+</footer>
+
+<!-- ordem importa: config, depois cálculo, depois interface -->
+<script src="js/config.js"></script>
+<script src="js/calculo.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

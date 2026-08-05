@@ -884,3 +884,29 @@ h1 em {
   .section--detail { padding-top: 9.5rem; }
   .page-hero { padding-top: 10.5rem; }
 }
+
+/* ================================================================
+   SIMULADOR DE FINANCIAMENTO — acréscimos
+   ================================================================ */
+
+/* Menu com 7 links.
+   O "Anuncie seu imóvel" partia em duas linhas dentro do próprio
+   link, desalinhando o menu inteiro. Este problema já existia no
+   site com 6 links (aparecia a partir de 1100px); com o sétimo
+   passou a aparecer já em 1440px. O nowrap resolve os dois casos. */
+@media (min-width: 56.25em) {
+  .nav__link { white-space: nowrap; padding: 0.5rem 0.6rem; }
+  .nav { gap: 0.15rem; }
+}
+
+/* Botões da página do imóvel.
+   A partir de 40em eles ficam lado a lado. Com o terceiro botão,
+   os três se espremiam e o texto quebrava em 3 linhas (130px de
+   altura). Agora ocupam a largura toda até 64em e só então vão
+   para a linha — todos com 54px de altura. */
+.detail__actions { flex-wrap: wrap; }
+.detail__actions .btn { flex: 1 1 100%; }
+
+@media (min-width: 64em) {
+  .detail__actions .btn { flex: 1 1 auto; }
+}

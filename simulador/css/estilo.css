@@ -1,0 +1,401 @@
+/* ═══════════════════════════════════════════════════════════════════
+   ESTILO.CSS — SIMULADOR DE FINANCIAMENTO
+
+   Padrão visual alinhado ao site da Monica Carvalho:
+   verde petróleo, acento dourado, fundo areia, tipografia serifada
+   nos títulos (Fraunces) e sans nos textos (Plus Jakarta Sans).
+
+   As cores NÃO ficam fixas aqui. Elas são injetadas pelo app.js a
+   partir do config.js. Assim você troca de cliente sem tocar no CSS.
+
+   Vértice node · vertice-node.com.br
+   ═══════════════════════════════════════════════════════════════════ */
+
+:root{
+  /* preenchidas em tempo de execução pelo app.js */
+  --primary:      #0F3D3E;
+  --primary-dark: #0A2B2C;
+  --gold:         #B98A44;
+  --gold-soft:    rgba(185,138,68,.14);
+  /* versão clara do dourado, para uso SOBRE o verde escuro.
+     O #B98A44 puro sobre o verde dá só 3.86:1 e reprova em
+     acessibilidade; este dá 7.27:1. */
+  --gold-claro:   #DFC79A;
+  --bg:           #FAF8F4;
+  --bg-tinted:    #F1EFE8;
+  --surface:      #FFFFFF;
+  --text:         #1D2A28;
+  --muted:        #5C6B67;
+  --border:       rgba(15,61,62,.12);
+
+  /* verde do WhatsApp escurecido para passar no contraste AA
+     (5.02:1 com texto branco). O #25D366 puro dá só 1.98:1. */
+  --whatsapp:     #15803D;
+  --whatsapp-esc: #116631;
+
+  --font-display: "Fraunces", Georgia, serif;
+  --font-body:    "Plus Jakarta Sans", system-ui, -apple-system, sans-serif;
+
+  --container:   72rem;
+  --radius:      1rem;
+  --radius-lg:   1.4rem;
+  --shadow-card:  0 8px 28px rgba(15,61,62,.08);
+  --shadow-hover: 0 18px 44px rgba(15,61,62,.16);
+  --transition:  .3s cubic-bezier(.4,0,.2,1);
+}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:var(--font-body);
+  font-size:16px;line-height:1.65;
+  -webkit-font-smoothing:antialiased;
+}
+
+/* números sempre alinhados em colunas */
+.sistema-valor,.renda-valor,.valor-atual,
+.mini dd,.lista-custos dd,#valorEconomia{
+  font-variant-numeric:tabular-nums;
+  font-feature-settings:"tnum";
+}
+
+.env{max-width:var(--container);margin:0 auto;padding:0 1.5rem;width:100%}
+
+.eyebrow{
+  display:inline-block;font-size:.78rem;font-weight:700;
+  letter-spacing:.14em;text-transform:uppercase;color:var(--gold);
+}
+.eyebrow--claro{color:var(--gold-claro)}
+
+/* ═══════════════ TOPO FIXO ═══════════════ */
+.topo{
+  position:fixed;inset-inline:0;top:0;z-index:50;
+  background:rgba(250,248,244,.85);
+  backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  border-bottom:1px solid transparent;
+  transition:border-color var(--transition),background var(--transition);
+}
+.topo.rolou{background:rgba(250,248,244,.97);border-bottom-color:var(--border)}
+.topo-conteudo{display:flex;align-items:center;justify-content:space-between;
+  gap:1rem;min-height:4.5rem;padding-top:.6rem;padding-bottom:.6rem}
+
+.prof{display:flex;align-items:center;gap:.8rem;min-width:0;
+  text-decoration:none;color:inherit;border-radius:var(--radius);
+  padding:.3rem;margin:-.3rem;transition:opacity var(--transition)}
+a.prof:hover{opacity:.75}
+.prof img{display:block;width:auto;flex:none}
+.prof-sigla{
+  flex:none;display:grid;place-items:center;
+  width:2.5rem;height:2.5rem;border-radius:50%;
+  background:var(--primary);color:#F6F3EC;
+  font-family:var(--font-display);font-weight:600;font-size:.95rem;
+}
+.prof-txt{min-width:0;display:flex;flex-direction:column;line-height:1.25}
+.prof-nome{font-family:var(--font-display);font-weight:600;font-size:1.05rem;
+  color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.prof-sub{font-size:.78rem;color:var(--muted);letter-spacing:.01em}
+
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:.5rem;
+  font-family:var(--font-body);font-weight:700;font-size:.95rem;
+  padding:.85rem 1.7rem;border-radius:999px;border:1.5px solid transparent;
+  cursor:pointer;text-decoration:none;
+  transition:transform var(--transition),box-shadow var(--transition),
+             background var(--transition),border-color var(--transition);
+}
+.btn svg{width:1.1rem;height:1.1rem;flex:none}
+.btn--zap{
+  background:var(--whatsapp);color:#fff;
+  box-shadow:0 8px 22px rgba(21,128,61,.26);
+}
+.btn--zap:hover{background:var(--whatsapp-esc);transform:translateY(-2px);
+  box-shadow:var(--shadow-hover)}
+.btn--zap:focus-visible{outline:2px solid var(--primary);outline-offset:3px}
+.topo-zap{padding:.7rem 1.4rem;font-size:.9rem}
+
+/* ═══════════════ ABERTURA (HERO) ═══════════════ */
+.abertura{
+  position:relative;isolation:isolate;
+  padding:9.5rem 0 4rem;
+  background-color:var(--primary);
+  background-image:var(--fundo-imagem,none);
+  background-size:cover;
+  background-position:var(--fundo-posicao,center);
+  overflow:hidden;
+}
+/* camada que escurece a foto para o texto continuar legível */
+.abertura::before{
+  content:"";position:absolute;inset:0;z-index:-1;
+  background:linear-gradient(160deg,
+    rgba(10,43,44,var(--fundo-escuro,.86)) 0%,
+    rgba(15,61,62,calc(var(--fundo-escuro,.86) - .08)) 55%,
+    rgba(23,82,78,calc(var(--fundo-escuro,.86) - .16)) 100%);
+}
+.abertura-conteudo{max-width:44rem}
+h1{
+  font-family:var(--font-display);
+  font-size:clamp(2.1rem,5vw,3.4rem);line-height:1.1;
+  font-weight:600;letter-spacing:-.02em;color:#F6F3EC;
+  margin:.9rem 0 1rem;
+}
+h1 em{font-style:italic;color:var(--gold-claro);font-weight:400}
+.lead{font-size:clamp(1rem,2.2vw,1.15rem);color:rgba(246,243,236,.82);
+  max-width:38rem}
+
+/* ═══════════════ PAINEL ═══════════════ */
+.painel{
+  display:grid;grid-template-columns:24rem 1fr;gap:1.4rem;
+  align-items:start;margin-top:-2.5rem;position:relative;z-index:2;
+}
+
+/* ─── controles ─── */
+.controles{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--radius-lg);padding:1.75rem;
+  box-shadow:var(--shadow-card);
+  position:sticky;top:6rem;
+}
+.campo{margin-bottom:1.75rem}
+.campo:last-child{margin-bottom:0}
+.campo-topo{display:flex;align-items:baseline;justify-content:space-between;
+  gap:.6rem;margin-bottom:.7rem}
+label{font-size:.85rem;font-weight:600;color:var(--text)}
+.valor-atual{font-family:var(--font-display);font-weight:600;font-size:1.25rem;
+  color:var(--primary);letter-spacing:-.01em}
+.faixa{display:flex;justify-content:space-between;margin-top:.45rem;
+  font-size:.75rem;color:var(--muted)}
+.aviso-min{color:#A8443A;font-weight:700}
+.aviso-min:empty{display:none}
+
+input[type=range]{
+  -webkit-appearance:none;appearance:none;width:100%;height:5px;
+  background:var(--bg-tinted);border-radius:4px;outline:none;cursor:pointer;
+}
+input[type=range]::-webkit-slider-thumb{
+  -webkit-appearance:none;appearance:none;width:22px;height:22px;
+  border-radius:50%;background:var(--primary);cursor:pointer;
+  border:3px solid var(--surface);box-shadow:0 2px 8px rgba(15,61,62,.3);
+  transition:transform var(--transition);
+}
+input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.12)}
+input[type=range]::-moz-range-thumb{
+  width:22px;height:22px;border-radius:50%;background:var(--primary);
+  cursor:pointer;border:3px solid var(--surface);
+  box-shadow:0 2px 8px rgba(15,61,62,.3);
+}
+input[type=range]:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+
+.entrada-taxa{display:flex;align-items:center;gap:.6rem}
+.entrada-taxa input{
+  width:6.5rem;font-family:var(--font-display);font-weight:600;font-size:1.2rem;
+  color:var(--primary);border:1px solid var(--border);border-radius:.7rem;
+  padding:.55rem .8rem;background:var(--bg);
+}
+.entrada-taxa input:focus{outline:2px solid var(--gold);outline-offset:1px;
+  border-color:transparent}
+.sufixo{font-size:.85rem;color:var(--muted);font-weight:600}
+.nota{font-size:.78rem;color:var(--muted);margin-top:.6rem;line-height:1.5}
+
+/* ─── resultados ─── */
+.resultados{display:grid;gap:1.1rem}
+
+.comparativo{display:grid;grid-template-columns:1fr 1fr;gap:1.1rem}
+.sistema{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--radius-lg);padding:1.5rem;
+  box-shadow:var(--shadow-card);
+  transition:transform var(--transition),box-shadow var(--transition),
+             border-color var(--transition);
+}
+.sistema:hover{transform:translateY(-4px);box-shadow:var(--shadow-hover);
+  border-color:rgba(185,138,68,.45)}
+.sistema.destaque{border-color:rgba(185,138,68,.5);background:
+  linear-gradient(180deg,var(--gold-soft) 0%,var(--surface) 42%)}
+.sistema-tag{
+  display:inline-block;font-size:.68rem;font-weight:700;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--muted);
+  background:var(--bg-tinted);border-radius:999px;
+  padding:.3rem .75rem;margin-bottom:1rem;
+}
+.sistema.destaque .sistema-tag{background:var(--primary);color:#F6F3EC}
+.sistema-rotulo{font-size:.8rem;color:var(--muted)}
+.sistema-valor{font-family:var(--font-display);
+  font-size:clamp(1.7rem,3.4vw,2.15rem);font-weight:600;
+  letter-spacing:-.02em;color:var(--primary);line-height:1.15;margin-top:.15rem}
+.sistema-nota{font-size:.82rem;color:var(--muted);margin-top:.4rem}
+.sistema-nota strong{color:var(--text);font-weight:700}
+
+.mini{margin-top:1.1rem;padding-top:.9rem;border-top:1px solid var(--border);
+  display:grid;gap:.45rem}
+.mini div{display:flex;justify-content:space-between;gap:.6rem;align-items:baseline}
+.mini dt{font-size:.82rem;color:var(--muted)}
+.mini dd{font-size:.9rem;font-weight:700;color:var(--text)}
+
+.economia{
+  background:var(--gold-soft);border:1px solid rgba(185,138,68,.3);
+  border-radius:var(--radius);padding:1rem 1.4rem;
+  display:flex;align-items:baseline;gap:.5rem;flex-wrap:wrap;
+  font-size:.9rem;color:var(--primary-dark);
+}
+.economia strong{font-family:var(--font-display);font-size:1.2rem;
+  font-weight:600;letter-spacing:-.01em;color:var(--primary)}
+
+/* ─── gráfico ─── */
+.grafico{background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--radius-lg);padding:1.5rem;box-shadow:var(--shadow-card)}
+.grafico figcaption{font-family:var(--font-display);font-size:1.05rem;
+  font-weight:600;color:var(--text);margin-bottom:1.1rem}
+#areaGrafico svg{display:block;width:100%;height:auto}
+.legenda{display:flex;gap:1.3rem;margin-top:.8rem}
+.chave{display:inline-flex;align-items:center;gap:.5rem;font-size:.8rem;
+  color:var(--muted)}
+.chave::before{content:"";width:16px;height:3px;border-radius:2px}
+.chave-sac::before{background:var(--primary)}
+.chave-price::before{background:var(--gold)}
+
+/* ─── renda ─── */
+.renda{background:var(--primary);border-radius:var(--radius-lg);
+  padding:1.75rem;color:#F6F3EC;position:relative;overflow:hidden}
+.renda::after{
+  content:"";position:absolute;right:-3rem;top:-3rem;
+  width:12rem;height:12rem;border-radius:50%;
+  background:radial-gradient(circle,rgba(185,138,68,.22),transparent 70%);
+  pointer-events:none;
+}
+.renda-rotulo{font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--gold-claro);font-weight:700;margin-bottom:.4rem}
+.renda-valor{font-family:var(--font-display);
+  font-size:clamp(1.9rem,4vw,2.5rem);font-weight:600;
+  letter-spacing:-.02em;line-height:1.1}
+.renda-nota{font-size:.85rem;color:rgba(246,243,236,.72);margin-top:.7rem;
+  max-width:30rem}
+.renda-nota strong{color:#F6F3EC;font-weight:700}
+
+/* ─── custos ─── */
+.custos{background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--radius-lg);padding:1.6rem;box-shadow:var(--shadow-card)}
+.custos h2{font-family:var(--font-display);font-size:1.2rem;font-weight:600;
+  color:var(--text);margin-bottom:1rem}
+.lista-custos{display:grid;gap:.7rem}
+.lista-custos div{display:flex;justify-content:space-between;gap:.8rem;
+  align-items:baseline}
+.lista-custos dt{font-size:.9rem;color:var(--text)}
+.lista-custos dt small{color:var(--muted);font-size:.78rem}
+.lista-custos dd{font-size:.95rem;font-weight:700;color:var(--text)}
+.lista-custos .total{border-top:1px solid var(--border);padding-top:.8rem;
+  margin-top:.25rem}
+.lista-custos .total dt{font-weight:700}
+.lista-custos .total dd{color:var(--primary);font-size:1.25rem;
+  font-family:var(--font-display);font-weight:600}
+
+/* ═══════════════ CTA ═══════════════
+   Grid de duas colunas: o texto ocupa o que sobrar (1fr) e o
+   formulário reserva a largura de que precisa (auto). */
+.cta{
+  margin:2.5rem 0 0;
+  background:var(--primary);color:#F6F3EC;
+  border-radius:var(--radius-lg);padding:2.2rem;
+  display:grid;grid-template-columns:1fr auto;align-items:center;gap:1.8rem;
+  position:relative;overflow:hidden;
+}
+.cta::after{
+  content:"";position:absolute;left:-4rem;bottom:-5rem;
+  width:16rem;height:16rem;border-radius:50%;
+  background:radial-gradient(circle,rgba(185,138,68,.18),transparent 70%);
+  pointer-events:none;
+}
+.cta-texto{position:relative;z-index:1}
+.cta-texto h2{font-family:var(--font-display);font-size:1.5rem;font-weight:600;
+  letter-spacing:-.01em;margin-bottom:.35rem}
+.cta-texto p{font-size:.92rem;color:rgba(246,243,236,.75)}
+.cta-form{display:flex;gap:.7rem;flex-wrap:nowrap;align-items:stretch;
+  position:relative;z-index:1}
+#nomeCliente{
+  flex:none;width:13rem;font-family:inherit;font-size:.95rem;
+  padding:.85rem 1rem;border:1.5px solid rgba(246,243,236,.28);
+  border-radius:999px;background:rgba(246,243,236,.1);color:#F6F3EC;
+}
+#nomeCliente::placeholder{color:rgba(246,243,236,.55)}
+#nomeCliente:focus{outline:2px solid var(--gold);outline-offset:2px;
+  background:rgba(246,243,236,.16);border-color:transparent}
+.cta .btn--zap{white-space:nowrap}
+
+/* ═══════════════ AVISO E RODAPÉ ═══════════════ */
+.disclaimer{
+  margin:1.6rem 0 0;font-size:.78rem;line-height:1.65;color:var(--muted);
+  background:var(--bg-tinted);border:1px solid var(--border);
+  border-radius:var(--radius);padding:1.1rem 1.3rem;
+}
+.disclaimer strong{color:var(--text);font-weight:700}
+
+.rodape{margin-top:3.5rem;background:var(--surface);
+  border-top:1px solid var(--border);padding:1.8rem 0}
+.rodape-conteudo{display:flex;justify-content:space-between;align-items:center;
+  gap:1.2rem;flex-wrap:wrap;font-size:.85rem;color:var(--muted)}
+.rodape-prof strong{color:var(--text);font-weight:700;
+  font-family:var(--font-display)}
+
+/* ─── assinatura da Vértice node ─── */
+.assinatura{
+  display:inline-flex;align-items:center;gap:.7rem;
+  text-decoration:none;color:var(--muted);
+  padding:.35rem .5rem;margin:-.35rem -.5rem;border-radius:var(--radius);
+  transition:opacity var(--transition),background var(--transition);
+}
+.assinatura:hover{opacity:.72;background:var(--bg-tinted)}
+.assinatura:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+.assinatura img{display:block;width:auto}
+.assinatura-texto{font-size:.8rem;white-space:nowrap}
+.credito-texto{font-family:var(--font-display);font-weight:600;
+  font-size:1rem;color:var(--text)}
+
+/* ═══════════════ ANIMAÇÃO DE ENTRADA ═══════════════ */
+.reveal{opacity:0;transform:translateY(24px);
+  transition:opacity .7s ease,transform .7s ease}
+.reveal.visivel{opacity:1;transform:translateY(0)}
+.atraso-1{transition-delay:.1s}
+.atraso-2{transition-delay:.2s}
+.atraso-3{transition-delay:.3s}
+
+/* ═══════════════ RESPONSIVO ═══════════════ */
+@media (max-width:980px){
+  .painel{grid-template-columns:1fr}
+  .controles{position:static}
+  .abertura{padding:8rem 0 4rem}
+}
+
+/* Abaixo de 900px o CTA lado a lado aperta o texto: tudo empilha. */
+@media (max-width:900px){
+  .cta{grid-template-columns:1fr;gap:1.4rem;padding:1.8rem}
+  .cta-form{flex-direction:column;width:100%;gap:.8rem}
+  #nomeCliente{width:100%;min-width:0;padding:.95rem 1.1rem;font-size:16px}
+  .cta .btn--zap{width:100%;min-width:0;padding:1rem 1.2rem;font-size:1rem}
+}
+
+@media (max-width:620px){
+  .comparativo{grid-template-columns:1fr}
+  .topo-zap span{display:none}
+  .topo-zap{padding:.7rem .9rem}
+  .prof-sub{display:none}
+  .painel{margin-top:-1.5rem}
+  .rodape-conteudo{flex-direction:column;align-items:flex-start;gap:1rem}
+  .assinatura{flex-direction:column;align-items:flex-start;gap:.5rem}
+  .assinatura-texto{white-space:normal}
+}
+
+/* iPhone SE e similares: o texto do botão pode quebrar em 2 linhas */
+@media (max-width:430px){
+  .cta .btn--zap{white-space:normal;text-wrap:balance;line-height:1.32;
+    font-size:.97rem;padding:.9rem 1rem}
+}
+
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{
+    animation-duration:.01ms!important;transition-duration:.01ms!important;
+  }
+  .reveal{opacity:1;transform:none}
+}

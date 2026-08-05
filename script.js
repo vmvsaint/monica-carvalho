@@ -204,6 +204,29 @@ async function iniciarSite() {
      monta a página: galeria de fotos, descrição completa,
      características, custos e botões de contato.
      ================================================================ */
+  /* Monta o link do simulador com o valor do imóvel já preenchido.
+     Devolve "" (botão não aparece) quando não faz sentido simular:
+       • imóvel de locação — não se financia aluguel
+       • preço vazio ou sem número — lançamento ainda sem valor
+     Assim os lançamentos futuros já funcionam sozinhos: no dia em
+     que você preencher o preço, o botão aparece. */
+  function linkSimulador(imovel) {
+    if (!imovel || imovel.tipo === "locacao") return "";
+
+    var digitos = String(imovel.preco || "").replace(/\D/g, "");
+    if (!digitos) return "";
+
+    var valor = Number(digitos);
+    if (!valor || valor < 1000) return "";
+
+    var base = (typeof CONFIG !== "undefined" && CONFIG.simuladorUrl)
+      ? CONFIG.simuladorUrl
+      : "simulador/index.html";
+
+    return base + "?valor=" + valor +
+           "&imovel=" + encodeURIComponent(imovel.titulo || "");
+  }
+
   if (page === "detalhe") {
     const container = document.getElementById("propertyDetail");
     const relatedSection = document.getElementById("relatedSection");
@@ -299,6 +322,10 @@ async function iniciarSite() {
             '<div class="detail__actions">' +
               '<a href="' + linkWhatsappImovel(imovel) + '" class="btn btn--gold" target="_blank" rel="noopener" ' +
                 'aria-label="Falar com Monica sobre este imóvel no WhatsApp">Tenho interesse neste imóvel</a>' +
+              (linkSimulador(imovel)
+                ? '<a href="' + linkSimulador(imovel) + '" class="btn btn--outline btn--simulador" ' +
+                  'aria-label="Simular financiamento deste imóvel">Simular financiamento</a>'
+                : "") +
               '<a href="#" class="btn btn--outline js-instagram-detalhe" target="_blank" rel="noopener" ' +
                 'aria-label="Seguir Monica no Instagram">Seguir no Instagram</a>' +
             "</div>" +
