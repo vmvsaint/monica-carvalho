@@ -910,3 +910,81 @@ h1 em {
 @media (min-width: 64em) {
   .detail__actions .btn { flex: 1 1 auto; }
 }
+/* ================================================================
+   BOTÃO DE COMPARTILHAR IMÓVEL
+   ----------------------------------------------------------------
+   Aparece em cada card (ícone ao lado de "Ver detalhes") e na
+   página de detalhes (botão "Compartilhar", junto dos demais).
+   No celular abre o menu do próprio aparelho; no computador copia
+   o link e mostra o aviso .share-toast.
+   ================================================================ */
+
+/* Linha "Ver detalhes" + ícone de compartilhar, dentro do card */
+.property-card__actions {
+  display: flex;
+  align-items: stretch;
+  gap: 0.6rem;
+}
+.property-card__actions .btn { flex: 1; }
+
+/* Botão só com ícone (card) */
+.share-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  width: 2.95rem;
+  background: transparent;
+  color: var(--primary);
+  border: 1.5px solid var(--primary);
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background var(--transition), color var(--transition),
+              transform var(--transition), border-color var(--transition);
+}
+.share-btn:hover {
+  background: var(--primary);
+  color: #f6f3ec;
+  transform: translateY(-3px);
+}
+
+/* Botão com texto (página de detalhes): <button> não herda a
+   altura de linha do site, então os botões ficavam mais baixos que
+   os links vizinhos. Isto iguala a altura dos três. */
+.js-share.btn { line-height: 1.65; }
+
+/* Aviso "Link copiado!" (criado pelo script.js) */
+.share-toast {
+  position: fixed;
+  left: 50%;
+  bottom: 1.6rem;
+  transform: translate(-50%, 1.2rem);
+  z-index: 90;
+  max-width: min(92vw, 26rem);
+  text-align: center;
+  background: var(--primary);
+  color: #f6f3ec;
+  font-size: 0.9rem;
+  font-weight: 600;
+  padding: 0.8rem 1.3rem;
+  border-radius: 999px;
+  box-shadow: var(--shadow-hover);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--transition), transform var(--transition);
+}
+.share-toast.is-visible {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
+/* O botão flutuante do WhatsApp fica no canto direito: em telas
+   pequenas o aviso sobe um pouco para não encostar nele. */
+@media (max-width: 30em) {
+  .share-toast { bottom: 6.2rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .share-btn:hover { transform: none; }
+  .share-toast { transition: opacity var(--transition); }
+}

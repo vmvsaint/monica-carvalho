@@ -1,0 +1,11 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "rewrites": [
+    { "source": "/imovel/:id(\\d+)", "destination": "/api/imovel?id=:id" }
+  ],
+  "functions": {
+    "api/imovel.js": {
+      "includeFiles": "imovel.html"
+    }
+  }
+}

@@ -291,6 +291,9 @@
 
     lista.querySelectorAll("[data-apagar]").forEach((b) =>
       b.addEventListener("click", () => apagarImovel(Number(b.dataset.apagar))));
+
+    lista.querySelectorAll("[data-compartilhar]").forEach((b) =>
+      b.addEventListener("click", () => compartilharImovel(Number(b.dataset.compartilhar))));
   }
 
   function cartaoDoImovel(imovel) {
@@ -316,6 +319,11 @@
               " · " + qtdFotos + " foto(s) · id " + imovel.id + "</p>" +
             '<div class="admin-card__acoes">' +
               '<button class="pill pill--primary pill--sm" data-editar="' + imovel.id + '" type="button"><span>Editar</span></button>' +
+              /* Só faz sentido enviar o link de um imóvel que está no
+                 ar — o que está "Fora do ar" abriria uma página vazia. */
+              (imovel.ativo
+                ? '<button class="pill pill--ghost pill--sm" data-compartilhar="' + imovel.id + '" type="button"><span>Compartilhar</span></button>'
+                : "") +
               '<button class="pill pill--ghost pill--sm" data-publicar="' + imovel.id + '" type="button"><span>' +
                 (imovel.ativo ? "Tirar do ar" : "Publicar") + "</span></button>" +
               '<button class="pill pill--perigo pill--sm" data-apagar="' + imovel.id + '" type="button"><span>Apagar</span></button>' +
@@ -324,6 +332,69 @@
         "</div>" +
       "</article>"
     );
+  }
+
+  /* ==============================================================
+     COMPARTILHAR UM IMÓVEL PELO PAINEL
+     --------------------------------------------------------------
+     Mesmo botão que existe no site, aqui do lado do "Editar": envia
+     o link do imóvel para um cliente sem precisar abrir o site.
+
+     O link enviado é o /imovel/7 (e não o imovel.html?id=7) porque
+     é ele que monta a pré-visualização com a foto e o preço no
+     WhatsApp. Quem faz isso é o arquivo api/imovel.js.
+     ============================================================== */
+  function linkDoImovel(id) {
+    const local =
+      window.location.protocol === "file:" ||
+      /^(localhost|127\.0\.0\.1|\[::1\])$/.test(window.location.hostname);
+
+    return new URL(local ? "imovel.html?id=" + id : "imovel/" + id, document.baseURI).href;
+  }
+
+  async function compartilharImovel(id) {
+    const imovel = imoveisCarregados.find((i) => i.id === id);
+    if (!imovel) return;
+
+    const url = linkDoImovel(id);
+    const dados = {
+      title: imovel.titulo || "Imóvel",
+      text: "Veja este imóvel: " + (imovel.titulo || "") +
+            (imovel.bairro ? " — " + imovel.bairro : "") +
+            (imovel.preco ? " · " + imovel.preco : ""),
+      url: url,
+    };
+
+    /* No celular abre o menu do próprio aparelho (WhatsApp, e-mail…) */
+    if (navigator.share) {
+      try {
+        await navigator.share(dados);
+      } catch (erro) {
+        /* a pessoa fechou o menu — não é erro */
+      }
+      return;
+    }
+
+    /* No computador, copia o link */
+    try {
+      if (navigator.clipboard && window.isSecureContext) {
+        await navigator.clipboard.writeText(url);
+      } else {
+        const campo = document.createElement("textarea");
+        campo.value = url;
+        campo.setAttribute("readonly", "");
+        campo.style.position = "fixed";
+        campo.style.opacity = "0";
+        document.body.appendChild(campo);
+        campo.select();
+        const copiou = document.execCommand("copy");
+        document.body.removeChild(campo);
+        if (!copiou) throw new Error("sem cópia");
+      }
+      aviso("Link copiado! Agora é só colar e enviar.");
+    } catch (erro) {
+      aviso("Copie o link do imóvel: " + url, true);
+    }
   }
 
   /* Faz os cartões surgirem conforme entram na tela.

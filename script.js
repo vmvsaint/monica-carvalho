@@ -85,6 +85,149 @@ async function iniciarSite() {
     );
   }
 
+  /* ---------- COMPARTILHAR IMÓVEL ----------
+     Cada imóvel (nos cards e na página de detalhes) ganha um botão
+     de compartilhar. No celular abre o menu nativo de compartilhamento
+     (WhatsApp, Instagram, e-mail...). No computador, onde esse menu
+     não existe, o link é copiado para a área de transferência e um
+     aviso rápido aparece na tela. */
+
+  /* Endereço completo (https://...) da página do imóvel — é isso que
+     a pessoa recebe ao abrir o link compartilhado.
+
+     Repare que o link compartilhado é /imovel/7, e não o
+     imovel.html?id=7 dos botões do site. Os dois abrem a MESMA
+     página; a diferença é que o /imovel/7 passa antes pela função
+     api/imovel.js (na Vercel), que monta a pré-visualização com a
+     foto e o preço daquele imóvel para o WhatsApp, o Instagram e o
+     Facebook mostrarem. */
+  function urlCompletaImovel(imovel) {
+    /* Abrindo o site direto do computador (sem servidor) o endereço
+       bonito não existe — nesse caso usamos o de sempre, para você
+       conseguir testar localmente. */
+    const local =
+      window.location.protocol === "file:" ||
+      /^(localhost|127\.0\.0\.1|\[::1\])$/.test(window.location.hostname);
+
+    const caminho = local ? "imovel.html?id=" + imovel.id : "imovel/" + imovel.id;
+
+    /* document.baseURI (e não location.href) porque a página servida
+       em /imovel/7 recebe um <base href="/">. */
+    return new URL(caminho, document.baseURI).href;
+  }
+
+  /* Ícone de compartilhar (usado no card e na página de detalhes) */
+  const ICONE_COMPARTILHAR =
+    '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" ' +
+      'stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">' +
+      '<circle cx="18" cy="5" r="3"></circle>' +
+      '<circle cx="6" cy="12" r="3"></circle>' +
+      '<circle cx="18" cy="19" r="3"></circle>' +
+      '<line x1="8.6" y1="10.5" x2="15.4" y2="6.5"></line>' +
+      '<line x1="8.6" y1="13.5" x2="15.4" y2="17.5"></line>' +
+    "</svg>";
+
+  /* Monta o botão. Os dados do imóvel viajam em data-* para o clique
+     saber o que compartilhar (funciona igual em card e em detalhe). */
+  function botaoCompartilhar(imovel, opcoes) {
+    const classe = (opcoes && opcoes.classe) || "share-btn";
+    const texto = opcoes && opcoes.texto ? "<span>" + opcoes.texto + "</span>" : "";
+
+    return (
+      '<button type="button" class="js-share ' + classe + '" ' +
+        'data-share-url="' + urlCompletaImovel(imovel) + '" ' +
+        'data-share-titulo="' + String(imovel.titulo || "").replace(/"/g, "&quot;") + '" ' +
+        'data-share-texto="' + String(
+          "Veja este imóvel: " + (imovel.titulo || "") +
+          (imovel.bairro ? " — " + imovel.bairro : "") +
+          (imovel.preco ? " · " + imovel.preco : "")
+        ).replace(/"/g, "&quot;") + '" ' +
+        'aria-label="Compartilhar o imóvel ' + String(imovel.titulo || "").replace(/"/g, "&quot;") + '" ' +
+        'title="Compartilhar este imóvel">' +
+        ICONE_COMPARTILHAR + texto +
+      "</button>"
+    );
+  }
+
+  /* Avisinho flutuante ("Link copiado!") */
+  let avisoTimer = null;
+  function mostrarAviso(mensagem) {
+    let aviso = document.getElementById("shareToast");
+    if (!aviso) {
+      aviso = document.createElement("div");
+      aviso.id = "shareToast";
+      aviso.className = "share-toast";
+      aviso.setAttribute("role", "status");
+      aviso.setAttribute("aria-live", "polite");
+      document.body.appendChild(aviso);
+    }
+    aviso.textContent = mensagem;
+    aviso.classList.add("is-visible");
+    clearTimeout(avisoTimer);
+    avisoTimer = setTimeout(function () { aviso.classList.remove("is-visible"); }, 2600);
+  }
+
+  /* Copia o link mesmo em navegadores antigos ou fora de HTTPS */
+  function copiarLink(url) {
+    if (navigator.clipboard && window.isSecureContext) {
+      return navigator.clipboard.writeText(url).catch(function () {
+        return copiarLinkAntigo(url);
+      });
+    }
+    return copiarLinkAntigo(url);
+  }
+
+  function copiarLinkAntigo(url) {
+    return new Promise(function (resolve, reject) {
+      const campo = document.createElement("textarea");
+      campo.value = url;
+      campo.setAttribute("readonly", "");
+      campo.style.position = "fixed";
+      campo.style.opacity = "0";
+      document.body.appendChild(campo);
+      campo.select();
+      try {
+        document.execCommand("copy") ? resolve() : reject();
+      } catch (erro) {
+        reject(erro);
+      } finally {
+        document.body.removeChild(campo);
+      }
+    });
+  }
+
+  /* Um único ouvinte cuida de TODOS os botões, inclusive os que
+     forem criados depois (cards de imóveis semelhantes, filtros). */
+  document.addEventListener("click", function (evento) {
+    const botao = evento.target.closest ? evento.target.closest(".js-share") : null;
+    if (!botao) return;
+
+    evento.preventDefault();
+    evento.stopPropagation();
+
+    const dados = {
+      title: botao.dataset.shareTitulo || document.title,
+      text: botao.dataset.shareTexto || "",
+      url: botao.dataset.shareUrl || window.location.href,
+    };
+
+    if (navigator.share) {
+      navigator.share(dados).catch(function () { /* pessoa cancelou */ });
+      return;
+    }
+
+    copiarLink(dados.url)
+      .then(function () { mostrarAviso("Link copiado! Agora é só colar e enviar."); })
+      .catch(function () {
+        /* Último recurso: mostra o link para a pessoa copiar na mão */
+        try {
+          window.prompt("Copie o link do imóvel:", dados.url);
+        } catch (erro) {
+          mostrarAviso("Copie o link do imóvel: " + dados.url);
+        }
+      });
+  });
+
   /* Monta UM card de imóvel. O card inteiro leva para a página de
      detalhes (imovel.html?id=N). */
   function criarCard(imovel) {
@@ -114,8 +257,11 @@ async function iniciarSite() {
           "<span>🚗 " + imovel.vagas + "</span>" +
         "</div>" +
         '<p class="property-card__price">' + imovel.preco + "</p>" +
-        '<a href="' + urlDetalhes + '" class="btn btn--primary" ' +
-          'aria-label="Ver detalhes do imóvel ' + imovel.titulo + '">Ver detalhes</a>' +
+        '<div class="property-card__actions">' +
+          '<a href="' + urlDetalhes + '" class="btn btn--primary" ' +
+            'aria-label="Ver detalhes do imóvel ' + imovel.titulo + '">Ver detalhes</a>' +
+          botaoCompartilhar(imovel) +
+        "</div>" +
       "</div>";
 
     return card;
@@ -232,8 +378,12 @@ async function iniciarSite() {
     const relatedSection = document.getElementById("relatedSection");
     const relatedGrid = document.getElementById("relatedGrid");
 
+    /* O número do imóvel pode chegar de duas formas:
+         imovel.html?id=7  → endereço de sempre (links do site)
+         /imovel/7         → endereço compartilhado (ver api/imovel.js) */
     const params = new URLSearchParams(window.location.search);
-    const id = parseInt(params.get("id"), 10);
+    const noCaminho = window.location.pathname.match(/\/imovel\/(\d+)/);
+    const id = parseInt(params.get("id") || (noCaminho ? noCaminho[1] : ""), 10);
     const imovel = IMOVEIS.find((item) => item.id === id);
 
     if (!imovel) {
@@ -326,6 +476,7 @@ async function iniciarSite() {
                 ? '<a href="' + linkSimulador(imovel) + '" class="btn btn--outline btn--simulador" ' +
                   'aria-label="Simular financiamento deste imóvel">Simular financiamento</a>'
                 : "") +
+              botaoCompartilhar(imovel, { classe: "btn btn--outline", texto: "Compartilhar" }) +
               '<a href="#" class="btn btn--outline js-instagram-detalhe" target="_blank" rel="noopener" ' +
                 'aria-label="Seguir Monica no Instagram">Seguir no Instagram</a>' +
             "</div>" +
